@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter, Routes, Route, Outlet, Link, useLocation, useParams } from "react-router-dom";
@@ -8,10 +8,16 @@ import { Searchcontainer } from './searchcontainer';
 import { Receivedcontainer } from './receivedcontainer';
 import { Sentcontainer } from './sentcontainer';
 import { Confirmconfirmcontainer } from './confirmconfirmcontainer';
+import ComfirmedPage from './comfirmedpage'
+import { getUser } from './utilities';
 
 const App = () => {
 
-  const { user }= useParams();
+  var { user }= useParams();
+
+  useEffect(()=>{
+    user = getUser(user)
+  },[])
 
   return  (
       <div className="App">
@@ -45,11 +51,13 @@ root.render(<BrowserRouter basename={process.env.PUBLIC_URL}>
       <Route path= ":user" element ={<Profilecontainer />}/>
       <Route path= "profile/:user" element= {<Profilecontainer />}/>
       <Route path= "search/:user" element={<Searchcontainer />}/>
-      <Route path= "confirm" element={<Confirmcontainer />}>
+      <Route path= "confirm/:user" element={<ComfirmedPage />}/>
+
+      {/* <Route path= "confirm" element={<Confirmcontainer />}>
         <Route path= "sent/:user" element= {<Sentcontainer/>}/>
         <Route path= "received/:user" element= {<Receivedcontainer/>}/>
         <Route path= ":user" element= {<Confirmconfirmcontainer />}/>
-      </Route>
+      </Route> */}
     </Route>
 </Routes>
 </BrowserRouter>);
