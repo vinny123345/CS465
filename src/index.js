@@ -11,6 +11,23 @@ import { Confirmconfirmcontainer } from './confirmconfirmcontainer';
 import ComfirmedPage from './comfirmedpage'
 import { getUser } from './utilities';
 
+
+import { initializeApp } from 'firebase/app';
+
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
+  authDomain: "ieatcs465.firebaseapp.com",
+  projectId: "ieatcs465",
+  storageBucket: "ieatcs465.appspot.com",
+  messagingSenderId: "86450940860",
+  appId: "1:86450940860:web:8b798a96c3292a626d19b9",
+  measurementId: "G-WC6BY9CG6S"
+};
+
+const app = initializeApp(firebaseConfig);
+
+
 const App = () => {
 
   var { user }= useParams();
