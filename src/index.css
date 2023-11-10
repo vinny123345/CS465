@@ -11,3 +11,69 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.navtab {
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.profilelink, .confirmlink, .searchlink {
+  padding-top: 5vw;
+  padding-bottom: 5vw;
+  width: 33.33333333%;
+  text-align: center;
+}
+
+#link1, #link2, #link3 {
+  text-decoration: none;
+  color: black;
+}
+
+.profilelink {
+  background-color: blue;
+}
+
+.searchlink {
+  background-color: green;
+}
+
+.confirmlink {
+  background-color: red;
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+}
+
+.confirmnavtab {
+  width: 100vw;
+  top: 10%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.sentlink, .confirmlink, .receivedlink {
+  padding-top: 5vw;
+  padding-bottom: 5vw;
+  width: 33.33333333%;
+  text-align: center;
+}
+
+.sentlink {
+  background-color: blue;
+}
+
+.receivedlink {
+  background-color: green;
+}
+
+.confirmlink {
+  background-color: red;
+}

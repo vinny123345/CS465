@@ -1,17 +1,55 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route, Outlet, Link, useLocation, useParams } from "react-router-dom";
+import { Profilecontainer } from './profilecontainer';
+import { Confirmcontainer } from './confirmcontainer';
+import { Searchcontainer } from './searchcontainer';
+import { Receivedcontainer } from './receivedcontainer';
+import { Sentcontainer } from './sentcontainer';
+import { Confirmconfirmcontainer } from './confirmconfirmcontainer';
+
+const App = () => {
+
+  const { user }= useParams();
+
+  return  (
+      <div className="App">
+        <h1 id= "ieat">iEat</h1>
+          <div className="navtab">
+                  <div className= "profilelink">
+                  <Link to={`/profile/${user}`}
+                      id = "link1" >Profile
+                  </Link>
+                  </div>
+                  <div className= "searchlink">
+                  <Link to={`/search/${user}`}
+                      id = "link2"> Search
+                  </Link>
+                  </div>
+                  <div className= "confirmlink">
+                  <Link to = {`/confirm/${user}`}
+                    id = "link3"> Confirm
+                  </Link>
+                  </div>
+          </div>
+          <Outlet/>
+      </div>
+  )
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+root.render(<BrowserRouter basename={process.env.PUBLIC_URL}>
+  <Routes>
+    <Route path= "/" element={<App />}> 
+      <Route path= ":user" element ={<Profilecontainer />}/>
+      <Route path= "profile/:user" element= {<Profilecontainer />}/>
+      <Route path= "search/:user" element={<Searchcontainer />}/>
+      <Route path= "confirm" element={<Confirmcontainer />}>
+        <Route path= "sent/:user" element= {<Sentcontainer/>}/>
+        <Route path= "received/:user" element= {<Receivedcontainer/>}/>
+        <Route path= ":user" element= {<Confirmconfirmcontainer />}/>
+      </Route>
+    </Route>
+</Routes>
+</BrowserRouter>);
