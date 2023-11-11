@@ -1,7 +1,9 @@
+import CalendarComponent from "./CalendarComponent";
+
 export const Searchcontainer = () => {
-    return (
-        <div className = "hi">
-            This is the search page!
-        </div>
-    )
-}
+  return (
+    <div className="Search">
+      <CalendarComponent />
+    </div>
+  );
+};
