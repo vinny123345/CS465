@@ -76,16 +76,18 @@ const tempuser  = {
 
       </Card.Body>
       <Card.Body>
+        
       <Popconfirm
         title="Accept"
         description="Are you sure to accept?"
         onConfirm={onAccept}
         // onCancel={console.log('cancel')}
         okText="Yes"
-        cancelText="No"
-    >
-        <Button variant="success" >Accept</Button>
+        cancelText="No">
+            {onAccept ? <Button variant="success" >Accept</Button> : <></>}
+        
         </Popconfirm>
+
     <Popconfirm
         title="Delete"
         description="Are you sure to reject?"
@@ -215,9 +217,7 @@ function ComfirmedPage() {
 
       }, []);
 
-      const sentAccept = () => {
 
-      }
       const sentReject = () => {
 
       }
@@ -227,9 +227,7 @@ function ComfirmedPage() {
       const receivedReject = () => {
 
       }
-      const confirmedAccept = () => {
 
-      }
       const confirmedReject = () => {
 
       }
@@ -242,7 +240,7 @@ function ComfirmedPage() {
       <Tab eventKey="Sent" title="Sent">
         <div className="confirmed-page-window">
             {sent.map((e,i) => {
-                return <UserCardSent key={i} userObject={e}/>
+                return <UserCardSent key={i} userObject={e} onAccept={null} onReject={sentReject}/>
             })}
         </div>
 
@@ -250,7 +248,7 @@ function ComfirmedPage() {
       <Tab eventKey="Received" title="Received">
       <div className="confirmed-page-window">
       {received.map((e,i) => {
-            return <UserCardSent key={i} userObject={e}/>
+            return <UserCardSent key={i} userObject={e} onAccept={receivedAccept} onReject={receivedReject}/>
         })}
         </div>
       </Tab>
@@ -258,7 +256,7 @@ function ComfirmedPage() {
       <Tab eventKey="Confirmed" title="Confirmed">
       <div className="confirmed-page-window">
       {confirmed.map((e,i) => {
-            return <UserCardSent key={i} userObject={e}/>
+            return <UserCardSent key={i} userObject={e}  onAccept={null} onReject={confirmedReject}/>
         })}
         </div>
       </Tab>
