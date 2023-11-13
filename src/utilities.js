@@ -19,3 +19,9 @@ const user = {
 export function getUser(input_user) {
   return user;
 }
+
+
+
+export function updateUser() {
+  return;
+}
