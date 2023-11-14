@@ -1,10 +1,21 @@
 .profile-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     padding: 1rem;
     max-width: 100%;
-    box-sizing: border-box;
+}
+
+.preferences-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#avail-button, #location-button {
+    margin-top: 20%;
+    width: auto;
 }
 
 .profile-image-section {
@@ -12,11 +23,11 @@
 }
 
 .profile-picture {
+    margin-right: 100%;
     border-radius: 50%;
     width: 150px;
     height: 150px;
     background-color: #f3f3f3;
-    display: inline-block;
     margin-bottom: 1rem;
 }
 
@@ -27,10 +38,14 @@
 }
 
 input[type="file"] {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
     margin-bottom: 1rem;
 }
 
 .profile-details {
+    margin-left: 7.5%;
     flex-grow: 1;
 }
 
@@ -72,5 +87,9 @@ button:hover {
     width: 100%;
     height: 1px;
     background-color: #000;
-    margin-top: 2rem;
+    margin-top: .5rem;
+}
+
+#avail-modal, #loc-modal {
+    top: 40%;
 }

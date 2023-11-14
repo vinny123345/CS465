@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getUser, updateUser } from "./utilities";
+import { getUser, updateUser } from "./DBUtils";
 import './ProfileContainer.css';
+import {Button, Modal} from 'react-bootstrap';
 
 export const Profilecontainer = () => {
   const { user } = useParams();
@@ -15,6 +16,14 @@ export const Profilecontainer = () => {
     profile_pic: '',
     netid: '',
   });
+  const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+
+  const handleAvailabilityButtonClick = () => setShowAvailabilityModal(true);
+  const handleLocationButtonClick = () => setShowLocationModal(true);
+
+  const handleCloseAvailabilityModal = () => setShowAvailabilityModal(false);
+  const handleCloseLocationModal = () => setShowLocationModal(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,6 +57,7 @@ export const Profilecontainer = () => {
   };
 
   const handleImageChange = (e) => {
+    console.log("here");
     // Assuming you're sending the image to the backend as a Base64 string
     const fileReader = new FileReader();
     fileReader.readAsDataURL(e.target.files[0]);
@@ -60,12 +70,26 @@ export const Profilecontainer = () => {
     return <div>Loading...</div>;
   }
 
+  const handleRemoveAvailability = () => {
+    // Add logic for removing availability
+    handleCloseAvailabilityModal();
+  };
+
+  const handleRemoveLocation = () => {
+    // Add logic for removing location
+    handleCloseLocationModal();
+  };
+
   return (
     <>
-      <div className="profile-container">
+      <div className="profile">
+        <div className="profile-container">
         <div className="profile-image-section">
           {isEditing ? (
-            <input type="file" onChange={handleImageChange} />
+            <div className = "file-button"> 
+              <button style={{ display: 'block', width: '120px', height: '30px' }} onClick={() => document.getElementById('getFile').click()}>Choose File</button>
+              <input type='file' id="getFile" style={{ display: 'none' }} onChange={handleImageChange}></input>
+            </div>
           ) : (
             <div className="profile-picture">{userData.profile_pic}</div>
           )}
@@ -123,6 +147,54 @@ export const Profilecontainer = () => {
         </div>
       </div>
       <div className="bottom-line" />
+    </div>
+    <div className="preferences-buttons">
+      <button id="avail-button" onClick={handleAvailabilityButtonClick}>
+        Edit Availability
+      </button>
+
+      <button id="location-button" onClick={handleLocationButtonClick}>
+        Edit Locations
+      </button>
+
+      {/* Availability Modal */}
+      <Modal id =  "avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
+      <Modal.Header closeButton={false}>
+          <Modal.Title>Edit Availability</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Availability Modal!
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseAvailabilityModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleRemoveAvailability}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Location Modal */}
+      <Modal id =  "loc-modal"show={showLocationModal} onHide={handleCloseLocationModal}>
+      <Modal.Header closeButton={false}>
+          <Modal.Title>Edit Locations</Modal.Title>
+        </Modal.Header>
+        {/* Add your modal body content here */}
+        <Modal.Body>
+          Location
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseLocationModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleRemoveLocation}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+
     </>
   );
 };

@@ -11,13 +11,9 @@ import {
   useParams,
 } from "react-router-dom";
 import { Profilecontainer } from "./profilecontainer";
-import { Confirmcontainer } from "./confirmcontainer";
 import { Searchcontainer } from "./searchcontainer";
-import { Receivedcontainer } from "./receivedcontainer";
-import { Sentcontainer } from "./sentcontainer";
-import { Confirmconfirmcontainer } from "./confirmconfirmcontainer";
 import ComfirmedPage from "./comfirmedpage";
-import { getUser } from "./utilities";
+import { getUser } from "./DBUtils";
 
 import { initializeApp } from "firebase/app";
 
