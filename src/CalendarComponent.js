@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import "./CalendarStyle.css";
 
-const CalendarComponent = () => {
+const CalendarComponent = ({ onSaveDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [prevSelectedDate, setPrevSelectedDate] = useState(null);
   const [isCalendarVisible, setCalendarVisibility] = useState(false);
@@ -30,6 +31,8 @@ const CalendarComponent = () => {
     setPrevSelectedDate(selectedDate);
     setDateSaved(true);
     setCalendarVisibility(false);
+    // Call the onSaveDate callback prop
+    onSaveDate(selectedDate);
   };
 
   const tileDisabled = ({ date, view }) => {
@@ -54,10 +57,10 @@ const CalendarComponent = () => {
     >
       {isDateSaved && (
         <div style={{ marginTop: "10px", fontSize: "14px" }}>
-          <h2>
+          {/* <h2>
             Selected Date:{" "}
             {prevSelectedDate ? prevSelectedDate.toDateString() : ""}
-          </h2>
+          </h2> */}
         </div>
       )}
       <button onClick={handleToggleCalendar}>
