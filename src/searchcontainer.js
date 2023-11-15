@@ -1,52 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { getUser, getCompanionsWithDate } from "./DBUtils";
 import CalendarComponent from "./CalendarComponent";
-// import { getUser, updateUser } from "./DBUtils";
+import CompanionsList from "./CompanionsList"; // new component for listing companions
 
 export const Searchcontainer = () => {
+  const { user } = useParams();
+  const [userData, setUserData] = useState({
+    /* ... initial state ... */
+  });
   const [userSelectedDate, setUserSelectedDate] = useState(null);
+  const [companions, setCompanions] = useState([]);
 
-  const handleSaveDate = (date) => {
+  // Fetch user data on component mount or when 'user' changes
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUser(user);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+
+  const handleSaveDate = async (date) => {
     setUserSelectedDate(date);
-    // Extract the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
-    const dayOfWeek = date.getDay();
-    // queryFirebase(dayOfWeek);
+    const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
+
+    try {
+      const companionsList = await getCompanionsWithDate(
+        dayOfWeek,
+        userData.netid
+      );
+      setCompanions(companionsList);
+    } catch (error) {
+      console.error("Error fetching companions:", error);
+    }
   };
 
-  // Function to query the firebase database
-  // const queryFirebase = async (dayOfWeek) => {
-  //   // Assuming 'entries' is your collection and it has a 'dayOfWeek' field
-  //   const snapshot = await firebase
-  //     .firestore()
-  //     .collection("entries")
-  //     .where("dayOfWeek", "==", dayOfWeek)
-  //     .get();
-
-  //   if (snapshot.empty) {
-  //     console.log("No matching documents.");
-  //     return;
-  //   }
-
-  //   snapshot.forEach((doc) => {
-  //     console.log(doc.id, "=>", doc.data());
-  //     // Process your documents here
-  //   });
-  // };
-
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={styles.container}>
       {userSelectedDate ? (
-        <p style={{ fontSize: "16px" }}>
-          Your selected date is: {userSelectedDate.toDateString()}
-          <br />
-          It is a{" "}
-          {userSelectedDate.toLocaleDateString("en-US", { weekday: "long" })}
-        </p>
+        <>
+          <p style={styles.selectedDate}>
+            Your selected date is: {userSelectedDate.toDateString()}
+            <br />
+            It is a{" "}
+            {userSelectedDate.toLocaleDateString("en-US", { weekday: "long" })}
+          </p>
+          <CalendarComponent onSaveDate={handleSaveDate} />
+          <CompanionsList companions={companions} />
+        </>
       ) : (
-        <h1>Choose Your Date</h1>
+        <>
+          <h1>Choose Your Date</h1>
+          <CalendarComponent onSaveDate={handleSaveDate} />
+        </>
       )}
-      <CalendarComponent onSaveDate={handleSaveDate} />
     </div>
   );
+};
+
+const styles = {
+  container: { textAlign: "center" },
+  selectedDate: { fontSize: "16px" },
+  // Add more styles as needed
 };
 
 export default Searchcontainer;
