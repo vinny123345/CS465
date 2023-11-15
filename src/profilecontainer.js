@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getUser, updateUser } from "./DBUtils";
 import './ProfileContainer.css';
-import {Button, Modal} from 'react-bootstrap';
+import {Button, Modal, Nav, Tab, ListGroup, Form} from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 
 export const Profilecontainer = () => {
   const { user } = useParams();
@@ -16,27 +19,56 @@ export const Profilecontainer = () => {
     profile_pic: '',
     netid: '',
   });
+  const [initialAvailabilityView, setInitialAvailabilityView] = useState(true);
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
 
-  const handleAvailabilityButtonClick = () => setShowAvailabilityModal(true);
   const handleLocationButtonClick = () => setShowLocationModal(true);
 
-  const handleCloseAvailabilityModal = () => setShowAvailabilityModal(false);
-  const handleCloseLocationModal = () => setShowLocationModal(false);
+  const handleCloseAvailabilityModal = () => setShowAvailabilityModal(false);  
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+
+  const [fav_locations, setFav_locations] = useState([]);
+  const [activeTab, setActiveTab] = useState('restaurants');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getUser(user);
         setUserData(data);
+        console.log(data.availability[2]);
+        console.log(data.fav_locations);
+        if (data.availability) {
+          const days = Object.keys(data.availability);
+          const selectedDay = days.length > 0 ? days[0] : null;
+  
+          const { startTime, endTime } = data.availability[selectedDay] || {};
+
+          console.log('Selected Day:', selectedDay);
+          console.log('Start Time:', startTime);
+          console.log('End Time:', endTime);
+          setSelectedDay(selectedDay || null);
+          setStartTime(startTime || null);
+          setEndTime(endTime || null);
+        } else {
+          // Reset the selected day, start time, and end time
+          setSelectedDay(null);
+          setStartTime(null);
+          setEndTime(null);
+        }
+
+        if (data.fav_locations) {
+          setFav_locations(data.fav_locations);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     fetchData();
-  }, [user]);
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -70,14 +102,96 @@ export const Profilecontainer = () => {
     return <div>Loading...</div>;
   }
 
-  const handleRemoveAvailability = () => {
-    // Add logic for removing availability
-    handleCloseAvailabilityModal();
+  const handleAvailabilityButtonClick = () => {
+    setShowAvailabilityModal(true);
+    setInitialAvailabilityView(true);
+    // Set selected day, start time, and end time to current values from user data
+    setSelectedDay(userData.availability ? Object.keys(userData.availability)[0] : null);
+    setStartTime(userData.availability ? userData.availability[selectedDay]?.startTime || null : null);
+    setEndTime(userData.availability ? userData.availability[selectedDay]?.endTime || null : null);
   };
 
-  const handleRemoveLocation = () => {
-    // Add logic for removing location
-    handleCloseLocationModal();
+  const handleSaveAvailability = async () => {
+    try {
+      if (selectedDay && startTime !== null && endTime !== null) {
+        // Clone the existing availability object or create a new one if it doesn't exist
+        const existingAvailability = userData.availability ? { ...userData.availability } : {};
+  
+        // Update the selected day with the new availability
+        existingAvailability[selectedDay] = {
+          startTime: startTime,
+          endTime: endTime,
+        };
+  
+        // Update user data with the modified availability
+        const updatedUserData = {
+          ...userData,
+          availability: existingAvailability,
+        };
+  
+        await updateUser(user, updatedUserData);
+  
+        console.log(`Saved availability for ${selectedDay}: ${startTime} - ${endTime}`);
+      }
+
+      setSelectedDay(null);
+      handleCloseAvailabilityModal();
+    } catch (error) {
+      console.error('Error saving availability:', error);
+    }
+  };
+
+  const handleBackButtonClick = () => {
+    setSelectedDay(null);
+    setInitialAvailabilityView(true);
+  };
+
+  const handleDayButtonClick = (day) => {
+    setSelectedDay(day);
+    setInitialAvailabilityView(false);
+
+    // Set start time and end time based on the selected day's availability
+    setStartTime(userData.availability ? userData.availability[day]?.startTime || null : null);
+    setEndTime(userData.availability ? userData.availability[day]?.endTime || null : null);
+  };
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  const restaurantLocations = ['Bangkok Thai', 'Chipotle', 'Mia Zas', 'Potbellys','Raising Canes', 'Shawarma Joint'];
+  const cafeteriaLocations = ['Ikenberry Cafeteria', 'Illinois Street Cafeteria', 'Lincoln Avenue Cafeteria', 'Pennsylvania Avenue Cafeteria'];
+
+
+  const handleCloseLocationModal = () => {
+    setShowLocationModal(false);
+    // Reset tab to default when modal is closed
+    setActiveTab('restaurants');
+  };
+
+  const handleRemoveLocation = async () => {
+    try {
+      // Update user data with favorites
+      const updatedUserData = {
+        ...userData,
+        fav_locations: fav_locations,
+      };
+  
+      await updateUser(user, updatedUserData);
+  
+      console.log('Saved favorites:', fav_locations);
+  
+      handleCloseLocationModal();
+    } catch (error) {
+      console.error('Error saving favorites:', error);
+    }
+  };
+
+  const handleStarClick = (location) => {
+    // Add logic for adding/removing location to/from favorites
+      setFav_locations((prevFavorites) => {
+      const isFavorite = prevFavorites.includes(location);
+      return isFavorite
+        ? prevFavorites.filter((fav) => fav !== location)
+        : [...prevFavorites, location];
+    });
   };
 
   return (
@@ -158,31 +272,121 @@ export const Profilecontainer = () => {
       </button>
 
       {/* Availability Modal */}
-      <Modal id =  "avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
-      <Modal.Header closeButton={false}>
+      <Modal id="avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
+        <Modal.Header closeButton={false}>
           <Modal.Title>Edit Availability</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Availability Modal!
+          {initialAvailabilityView ? ( // Check the initial view state
+            <>
+              <p>Select a day to edit availability:</p>
+              {daysOfWeek.map((day, index) => (
+                <Button id="daybutton" key={index} onClick={() => handleDayButtonClick(day)}>
+                  {day}
+                </Button>
+              ))}
+            </>
+          ) : (
+            <>
+              <p>Editing {selectedDay}'s availability:</p>
+              {/* Drop-down for Start Time */}
+              <Form.Group controlId="startTime">
+                <Form.Label>Start Time</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={startTime !== null ? startTime : ''}
+                  onChange={(e) => setStartTime(e.target.value)}
+                >
+                  <option value="">--</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="12:30 AM">12:30 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="1:30 PM">1:30 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  {/* Add more options as needed */}
+                </Form.Control>
+              </Form.Group>
+
+              {/* Drop-down for End Time */}
+              <Form.Group controlId="endTime">
+                <Form.Label>End Time</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={endTime !== null ? endTime : ''}
+                  onChange={(e) => setEndTime(e.target.value)}
+                >
+                  <option value="">--</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="12:30 AM">12:30 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="1:30 PM">1:30 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  {/* Add more options as needed */}
+                </Form.Control>
+              </Form.Group>
+            </>
+          )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAvailabilityModal}>
-            Cancel
+          <Button variant="secondary" onClick={initialAvailabilityView ? handleCloseAvailabilityModal : handleBackButtonClick}>
+            {initialAvailabilityView ? 'Cancel' : 'Back'}
           </Button>
-          <Button variant="primary" onClick={handleRemoveAvailability}>
+          <Button variant="primary" onClick={handleSaveAvailability}>
             Save
           </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Location Modal */}
-      <Modal id =  "loc-modal"show={showLocationModal} onHide={handleCloseLocationModal}>
-      <Modal.Header closeButton={false}>
+      <Modal id =  "avail-modal" show={showLocationModal} onHide={handleCloseLocationModal}>
+        <Modal.Header closeButton={false}>
           <Modal.Title>Edit Locations</Modal.Title>
         </Modal.Header>
-        {/* Add your modal body content here */}
         <Modal.Body>
-          Location
+          <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab(key)}>
+            <Nav variant="tabs">
+              <Nav.Item>
+                <Nav.Link eventKey="restaurants">Restaurants</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="cafeterias">Cafeterias</Nav.Link>
+              </Nav.Item>
+            </Nav>
+            <Tab.Content>
+              <Tab.Pane eventKey="restaurants">
+                <ListGroup>
+                  {restaurantLocations.map((location, index) => (
+                    <ListGroup.Item key={index} action>
+                      <FontAwesomeIcon
+                        icon={fav_locations.includes(location) ? solidStar : regularStar}
+                        className="star-icon"
+                        onClick={() => handleStarClick(location)}
+                      />
+                      {location}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Tab.Pane>
+              <Tab.Pane eventKey="cafeterias">
+                <ListGroup>
+                  {cafeteriaLocations.map((location, index) => (
+                    <ListGroup.Item key={index} action>
+                      <FontAwesomeIcon
+                        icon={fav_locations.includes(location) ? solidStar : regularStar}
+                        className="star-icon"
+                        onClick={() => handleStarClick(location)}
+                      />
+                      {location}
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Tab.Pane>
+            </Tab.Content>
+          </Tab.Container>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseLocationModal}>
@@ -193,6 +397,7 @@ export const Profilecontainer = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      
     </div>
 
     </>

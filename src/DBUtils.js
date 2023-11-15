@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
-import { ref, query, orderByChild, equalTo, get, set } from "firebase/database";
+import { ref, query, orderByChild, equalTo, get, set, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
@@ -83,10 +83,9 @@ export async function updateUser(netid, updatedUserAttributes) {
 
       // Create a reference to the specific user by their netid
       const userRef = ref(db, `users/${id}`);
-      console.log(id);
 
       // Update the user's data in the database
-      await set(userRef, updatedUserAttributes);
+      await update(userRef, updatedUserAttributes);
       // Iterate through the users to find the one with the matching netid
       
     } else {

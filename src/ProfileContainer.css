@@ -93,3 +93,8 @@ button:hover {
 #avail-modal, #loc-modal {
     top: 40%;
 }
+
+#daybutton {
+    display: flex;
+    flex-direction: column;
+}

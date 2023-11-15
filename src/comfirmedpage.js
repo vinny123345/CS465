@@ -14,44 +14,6 @@ import Modal from 'react-bootstrap/Modal';
 
 import { message, Popconfirm } from 'antd';
 
-
-const tempuser  = {
-    "availability": [
-      {
-        "day": "Tuesday",
-        "end": "1:30 PM",
-        "start": "12:30 PM"
-      },
-      {
-        "day": "Thursday",
-        "end": "1:00 PM",
-        "start": "12:00 PM"
-      }
-    ],
-    "confirmed_requests": [
-      "bonnie5",
-      "foxy8"
-    ],
-    "fav_locations": "default",
-    "first_name": "ChancellorNew",
-    "gender": "male",
-    "grade": "senior",
-    "last_name": "Jones",
-    "major": "computer science",
-    "netid": "jones1",
-    "password": "1234",
-    "profile_pic": "default",
-    "received_requests": [
-      "freddy3",
-      "chica4"
-    ],
-    "sent_requests": [
-      "vadamo2",
-      "killeen2"
-    ]
-  }
-
-
   const UserCardSent =  ({userObject, onAccept, onReject}) => {
     // for user profile popup
   const [show, setShow] = useState(false);
