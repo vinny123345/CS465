@@ -11,13 +11,13 @@ export const Profilecontainer = () => {
   const { user } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
-    first_name: '',
-    last_name: '',
-    gender: '',
-    grade: '',
-    major: '',
-    profile_pic: '',
-    netid: '',
+    first_name: "test",
+    last_name: "test",
+    gender: "test",
+    grade: "test",
+    major: "test",
+    profile_pic: "test",
+    netid: "test",
   });
   const [initialAvailabilityView, setInitialAvailabilityView] = useState(true);
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
@@ -63,7 +63,7 @@ export const Profilecontainer = () => {
           setFav_locations(data.fav_locations);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       }
     };
 
@@ -79,7 +79,7 @@ export const Profilecontainer = () => {
       await updateUser(user, userData);
       setIsEditing(false);
     } catch (error) {
-      console.error('Error saving user data:', error);
+      console.error("Error saving user data:", error);
     }
   };
 
@@ -198,78 +198,99 @@ export const Profilecontainer = () => {
     <>
       <div className="profile">
         <div className="profile-container">
-        <div className="profile-image-section">
-          {isEditing ? (
-            <div className = "file-button"> 
-              <button style={{ display: 'block', width: '120px', height: '30px' }} onClick={() => document.getElementById('getFile').click()}>Choose File</button>
-              <input type='file' id="getFile" style={{ display: 'none' }} onChange={handleImageChange}></input>
-            </div>
-          ) : (
-            <div className="profile-picture">{userData.profile_pic}</div>
-          )}
-          <p className="netid"><strong>netid:</strong> {userData.netid}</p>
+          <div className="profile-image-section">
+            {isEditing ? (
+              <div className="file-button">
+                <button
+                  style={{ display: "block", width: "120px", height: "30px" }}
+                  onClick={() => document.getElementById("getFile").click()}
+                >
+                  Choose File
+                </button>
+                <input
+                  type="file"
+                  id="getFile"
+                  style={{ display: "none" }}
+                  onChange={handleImageChange}
+                ></input>
+              </div>
+            ) : (
+              <div className="profile-picture">{userData.profile_pic}</div>
+            )}
+            <p className="netid">
+              <strong>netid:</strong> {userData.netid}
+            </p>
+          </div>
+          <div className="profile-details">
+            <h1>Profile</h1>
+            {isEditing ? (
+              <>
+                <input
+                  type="text"
+                  name="first_name"
+                  className="form-control"
+                  value={userData.first_name}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="last_name"
+                  className="form-control"
+                  value={userData.last_name}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="gender"
+                  value={userData.gender}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="grade"
+                  className="form-control"
+                  value={userData.grade}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  name="major"
+                  className="form-control"
+                  value={userData.major}
+                  onChange={handleChange}
+                />
+                <button onClick={handleSaveClick}>Save</button>
+              </>
+            ) : (
+              <>
+                <p>
+                  <strong>Name:</strong> {userData.first_name}{" "}
+                  {userData.last_name}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {userData.gender}
+                </p>
+                <p>
+                  <strong>Grade:</strong> {userData.grade}
+                </p>
+                <p>
+                  <strong>Major:</strong> {userData.major}
+                </p>
+                <button onClick={handleEditClick}>Edit</button>
+              </>
+            )}
+          </div>
         </div>
-        <div className="profile-details">
-          <h1>Profile</h1>
-          {isEditing ? (
-            <>
-              <input
-                type="text"
-                name="first_name"
-                className="form-control"
-                value={userData.first_name}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="last_name"
-                className="form-control"
-                value={userData.last_name}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="gender"
-                value={userData.gender}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="grade"
-                className="form-control"
-                value={userData.grade}
-                onChange={handleChange}
-              />
-              <input
-                type="text"
-                name="major"
-                className="form-control"
-                value={userData.major}
-                onChange={handleChange}
-              />
-              <button onClick={handleSaveClick}>Save</button>
-            </>
-          ) : (
-            <>
-              <p><strong>Name:</strong> {userData.first_name} {userData.last_name}</p>
-              <p><strong>Gender:</strong> {userData.gender}</p>
-              <p><strong>Grade:</strong> {userData.grade}</p>
-              <p><strong>Major:</strong> {userData.major}</p>
-              <button onClick={handleEditClick}>Edit</button>
-            </>
-          )}
-        </div>
+        <div className="bottom-line" />
       </div>
-      <div className="bottom-line" />
-    </div>
-    <div className="preferences-buttons">
-      <button id="avail-button" onClick={handleAvailabilityButtonClick}>
-        Edit Availability
-      </button>
+      <div className="preferences-buttons">
+        <button id="avail-button" onClick={handleAvailabilityButtonClick}>
+          Edit Availability
+        </button>
 
-      <button id="location-button" onClick={handleLocationButtonClick}>
-        Edit Locations
-      </button>
+        <button id="location-button" onClick={handleLocationButtonClick}>
+          Edit Locations
+        </button>
 
       {/* Availability Modal */}
       <Modal id="avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
