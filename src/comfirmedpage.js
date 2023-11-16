@@ -149,180 +149,180 @@ function ComfirmedPage() {
   // current user: remove from current user - sent
   // effected user: remove from target user - received
   const sentReject = async (currnetid, effectednetid) => {
-    get(ref(db, `/users`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          console.log("sentreject test start");
-          console.log(snapshot.val());
-          console.log("sentreject test finish");
+    // get(ref(db, `/users`))
+    //   .then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       console.log("sentreject test start");
+    //       console.log(snapshot.val());
+    //       console.log("sentreject test finish");
 
-          // current user: remove from current user - sent
+    //       // current user: remove from current user - sent
 
 
-          let currUserObj = snapshot.val()[currnetid];
-          if (currUserObj) {
-            let updatedCurrUserSentList = currUserObj.sent_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserSentList);
-            set(
-              ref(db, `/users/${currnetid}/sent_requests`),
-              updatedCurrUserSentList
-            );
-          }
+    //       let currUserObj = snapshot.val()[currnetid];
+    //       if (currUserObj) {
+    //         let updatedCurrUserSentList = currUserObj.sent_requests.filter(
+    //           (e) => e != effectednetid
+    //         );
+    //         console.log(updatedCurrUserSentList);
+    //         set(
+    //           ref(db, `/users/${currnetid}/sent_requests`),
+    //           updatedCurrUserSentList
+    //         );
+    //       }
 
-          // effected user: remove from target user - received
+    //       // effected user: remove from target user - received
 
-          let effUserObj = snapshot.val()[effectednetid];
+    //       let effUserObj = snapshot.val()[effectednetid];
 
-          if (effUserObj) {
+    //       if (effUserObj) {
 
-            let updatedEffUserReceivedList =
-              effUserObj.received_requests.filter((e) => e != currnetid);
-            console.log(updatedEffUserReceivedList);
-            set(
-              ref(db, `/users/${effectednetid}/received_requests`),
-              updatedEffUserReceivedList
-            );
-          }
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    //         let updatedEffUserReceivedList =
+    //           effUserObj.received_requests.filter((e) => e != currnetid);
+    //         console.log(updatedEffUserReceivedList);
+    //         set(
+    //           ref(db, `/users/${effectednetid}/received_requests`),
+    //           updatedEffUserReceivedList
+    //         );
+    //       }
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   // current user: move from received to confirmed
   // effected user: move from sent to confirmed
   const receivedAccept = async (currnetid, effectednetid) => {
-    get(ref(db, `/users`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          // current user: move from received to confirmed
+    // get(ref(db, `/users`))
+    //   .then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       // current user: move from received to confirmed
 
-          let currUserObj = snapshot.val()[currnetid]
-          if (currUserObj) {
+    //       let currUserObj = snapshot.val()[currnetid]
+    //       if (currUserObj) {
 
-            currUserObj.received_requests =
-              currUserObj.received_requests.filter((e) => e != effectednetid);
-            currUserObj.confirmed_requests.push(effectednetid);
+    //         currUserObj.received_requests =
+    //           currUserObj.received_requests.filter((e) => e != effectednetid);
+    //         currUserObj.confirmed_requests.push(effectednetid);
 
-            console.log(currUserObj);
-            set(ref(db, `/users/${currnetid}`), currUserObj);
-          }
+    //         console.log(currUserObj);
+    //         set(ref(db, `/users/${currnetid}`), currUserObj);
+    //       }
 
-          // effected user: move from sent to confirmed
+    //       // effected user: move from sent to confirmed
 
-          let effUserObj = snapshot.val()[effectednetid]
-          if (effUserObj) {
+    //       let effUserObj = snapshot.val()[effectednetid]
+    //       if (effUserObj) {
 
-            effUserObj.sent_requests = effUserObj.sent_requests.filter(
-              (e) => e != currnetid
-            );
-            effUserObj.confirmed_requests.push(currnetid);
+    //         effUserObj.sent_requests = effUserObj.sent_requests.filter(
+    //           (e) => e != currnetid
+    //         );
+    //         effUserObj.confirmed_requests.push(currnetid);
 
-            console.log(effUserObj);
-            set(ref(db, `/users/${effectednetid}`), effUserObj);
-          }
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    //         console.log(effUserObj);
+    //         set(ref(db, `/users/${effectednetid}`), effUserObj);
+    //       }
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   // current user: remove from received
   // effected user: remove from sent
   const receivedReject = async (currnetid, effectednetid) => {
-    get(ref(db, `/users`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          // current user: remove from received
+    // get(ref(db, `/users`))
+    //   .then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       // current user: remove from received
 
-          let currUserObj = snapshot.val()[currnetid]
-          if (currUserObj) {
-            let updatedCurrUserList = currUserObj.received_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserList);
-            set(
-              ref(db, `/users/${currnetid}/received_requests`),
-              updatedCurrUserList
-            );
-          }
+    //       let currUserObj = snapshot.val()[currnetid]
+    //       if (currUserObj) {
+    //         let updatedCurrUserList = currUserObj.received_requests.filter(
+    //           (e) => e != effectednetid
+    //         );
+    //         console.log(updatedCurrUserList);
+    //         set(
+    //           ref(db, `/users/${currnetid}/received_requests`),
+    //           updatedCurrUserList
+    //         );
+    //       }
 
-          // effected user: remove from sent
+    //       // effected user: remove from sent
 
-          let effUserObj = snapshot.val()[effectednetid]
+    //       let effUserObj = snapshot.val()[effectednetid]
 
-          if (effUserObj) {
+    //       if (effUserObj) {
 
-            let updatedEffUserList = effUserObj.sent_requests.filter(
-              (e) => e != currnetid
-            );
-            console.log(updatedEffUserList);
-            set(
-              ref(db, `/users/${effectednetid}/sent_requests`),
-              updatedEffUserList
-            );
-          }
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    //         let updatedEffUserList = effUserObj.sent_requests.filter(
+    //           (e) => e != currnetid
+    //         );
+    //         console.log(updatedEffUserList);
+    //         set(
+    //           ref(db, `/users/${effectednetid}/sent_requests`),
+    //           updatedEffUserList
+    //         );
+    //       }
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   // current user: remove from confirmed
   // effected user: remove from confirmed
   const confirmedReject = async (currnetid, effectednetid) => {
-    get(ref(db, `/users`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          // current user: remove from confirmed
+    // get(ref(db, `/users`))
+    //   .then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       // current user: remove from confirmed
 
-          let currUserObj = snapshot.val()[currnetid]
-          if (currUserObj) {
+    //       let currUserObj = snapshot.val()[currnetid]
+    //       if (currUserObj) {
 
-            let updatedCurrUserList = currUserObj.confirmed_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserList);
-            set(
-              ref(db, `/users/${currnetid}/confirmed_requests`),
-              updatedCurrUserList
-            );
-          }
+    //         let updatedCurrUserList = currUserObj.confirmed_requests.filter(
+    //           (e) => e != effectednetid
+    //         );
+    //         console.log(updatedCurrUserList);
+    //         set(
+    //           ref(db, `/users/${currnetid}/confirmed_requests`),
+    //           updatedCurrUserList
+    //         );
+    //       }
 
-          // effected user: remove from confirmed
+    //       // effected user: remove from confirmed
 
-          let effUserObj = snapshot
-            .val()[effectednetid]
+    //       let effUserObj = snapshot
+    //         .val()[effectednetid]
 
-          if (effUserObj) {
+    //       if (effUserObj) {
 
-            let updatedEffUserList = effUserObj.confirmed_requests.filter(
-              (e) => e != currnetid
-            );
-            console.log(updatedEffUserList);
-            set(
-              ref(db, `/users/${effectednetid}/confirmed_requests`),
-              updatedEffUserList
-            );
-          }
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    //         let updatedEffUserList = effUserObj.confirmed_requests.filter(
+    //           (e) => e != currnetid
+    //         );
+    //         console.log(updatedEffUserList);
+    //         set(
+    //           ref(db, `/users/${effectednetid}/confirmed_requests`),
+    //           updatedEffUserList
+    //         );
+    //       }
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
   };
 
   return (
