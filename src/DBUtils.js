@@ -215,11 +215,13 @@ export async function filterTime(netId, companions, userSelectedDate) {
   const selfStart = selfAvailability[userSelectedDate].startTime;
   const selfEnd = selfAvailability[userSelectedDate].endTime;
   // delete the companions that don't have overlapping time with the user
+  console.log("companions", companions);
   companions.forEach((companion) => {
+    console.log(companion);
     const companionAvailability = companion.availability;
     const companionStart = companionAvailability[userSelectedDate].startTime;
     const companionEnd = companionAvailability[userSelectedDate].endTime;
-    if (companionStart > selfEnd || companionEnd < selfStart) {
+    if (companionStart >= selfEnd || companionEnd <= selfStart) {
       companions.splice(companions.indexOf(companion), 1);
     }
   });

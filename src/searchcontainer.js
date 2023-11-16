@@ -31,6 +31,33 @@ export const Searchcontainer = () => {
     fetchData();
   }, [user]);
 
+  const resetFilters = () => {
+    setIsTimeFilterApplied(false);
+    setIsLocationFilterApplied(false);
+  };
+
+  const applyFilters = async () => {
+    let filteredCompanions = [...originalCompanions];
+    console.log("originalCompanions", originalCompanions);
+    console.log("filteredCompanions", filteredCompanions);
+    if (isTimeFilterApplied) {
+      filteredCompanions = await filterTime(
+        userData.netid,
+        filteredCompanions,
+        userSelectedDate.toLocaleDateString("en-US", { weekday: "long" })
+      );
+    }
+
+    if (isLocationFilterApplied) {
+      filteredCompanions = await filterLocation(
+        userData.netid,
+        filteredCompanions
+      );
+    }
+
+    setCompanions(filteredCompanions);
+  };
+
   const handleSaveDate = async (date) => {
     try {
       const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -41,40 +68,24 @@ export const Searchcontainer = () => {
       );
       setCompanions(companionsList);
       setOriginalCompanions(companionsList); // Set original companions here
+      resetFilters();
     } catch (error) {
       console.error("Error fetching companions:", error);
     }
   };
 
-  const toggleTimeFilter = async () => {
-    setIsTimeFilterApplied(!isTimeFilterApplied);
-    if (!isTimeFilterApplied) {
-      // Apply time filter
-      const filteredCompanions = await filterTime(
-        userData.netid,
-        companions,
-        userSelectedDate.toLocaleDateString("en-US", { weekday: "long" })
-      );
-      setCompanions(filteredCompanions);
-    } else {
-      // Revert to original companions list
-      setCompanions(originalCompanions);
+  useEffect(() => {
+    if (originalCompanions.length > 0) {
+      applyFilters();
     }
+  }, [isTimeFilterApplied, isLocationFilterApplied, originalCompanions]);
+
+  const handleTimeFilterChange = (event) => {
+    setIsTimeFilterApplied(event.target.checked);
   };
 
-  const toggleLocationFilter = async () => {
-    setIsLocationFilterApplied(!isLocationFilterApplied);
-    if (!isLocationFilterApplied) {
-      // Apply location filter
-      const filteredCompanions = await filterLocation(
-        userData.netid,
-        companions
-      );
-      setCompanions(filteredCompanions);
-    } else {
-      // Revert to original companions list
-      setCompanions(originalCompanions);
-    }
+  const handleLocationFilterChange = (event) => {
+    setIsLocationFilterApplied(event.target.checked);
   };
 
   return (
@@ -83,23 +94,24 @@ export const Searchcontainer = () => {
         <>
           <p style={styles.selectedDate}>
             Your selected date is: {userSelectedDate.toDateString()}
-            <br />
-            It is a{" "}
-            {userSelectedDate.toLocaleDateString("en-US", { weekday: "long" })}
           </p>
           <CalendarComponent onSaveDate={handleSaveDate} />
-          <button
-            onClick={() => toggleTimeFilter()}
-            style={{ marginTop: "10px" }}
-          >
+          <label>
+            <input
+              type="checkbox"
+              checked={isTimeFilterApplied}
+              onChange={handleTimeFilterChange}
+            />
             Time Filter
-          </button>
-          <button
-            onClick={() => toggleLocationFilter()}
-            style={{ marginTop: "10px" }}
-          >
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={isLocationFilterApplied}
+              onChange={handleLocationFilterChange}
+            />
             Location Filter
-          </button>
+          </label>
           <CompanionsList companions={companions} date={userSelectedDate} />
         </>
       ) : (

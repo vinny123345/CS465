@@ -1,6 +1,10 @@
 import React from "react";
 import { UserCardSearch, UserCardSent } from "./UserCardComponent";
 
+const sendInvitation = (user, companion) => {
+  console.log("send invitation");
+};
+
 const CompanionsList = ({ companions, date }) => {
   return (
     <div>
@@ -16,7 +20,7 @@ const CompanionsList = ({ companions, date }) => {
                 key={i}
                 userObject={e}
                 onAccept={() => {
-                  console.log("accept");
+                  sendInvitation(e, companions);
                 }}
                 onReject={null}
                 dayOfWeek={dayOfWeek}
