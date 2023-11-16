@@ -1,6 +1,15 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-import { ref, query, orderByChild, equalTo, get, set, update } from "firebase/database";
+import { type } from "@testing-library/user-event/dist/type";
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+import {
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+  set,
+  update,
+} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
@@ -108,7 +117,7 @@ export async function getSelfAvailability(netid) {
       for (const userId in usersData) {
         const user = usersData[userId];
         if (user.netid === netid) {
-          return user.availability;
+          return user["availability"];
         }
       }
     } else {
@@ -128,34 +137,18 @@ export async function getCompanionsWithDate(day, netId) {
     // Iterate through the users to find all with the matching netid
     const usersRef = ref(db, `/users`);
     const snapshot = await get(usersRef);
-    // companion is a set of objects
-    const companions = [];
     if (snapshot.exists()) {
       // Extract and return the user data
       const usersData = snapshot.val();
       // Iterate through the users to find the one with the matching netid
-      const selfAvailability = getSelfAvailability(netId); // 2 is hard coded for now
-      for (const userId in usersData) {
-        const user = usersData[userId];
-        if (user.netid !== netId) {
-          const companionAvailability = user.availability;
-          for (const i in selfAvailability) {
-            const selfTimeSlot = selfAvailability[i];
-            for (const j in companionAvailability) {
-              const companionTimeSlot = companionAvailability[j];
-              if (selfTimeSlot.day === day && companionTimeSlot.day === day) {
-                if (
-                  selfTimeSlot.start <= companionTimeSlot.end &&
-                  selfTimeSlot.end >= companionTimeSlot.start
-                ) {
-                  companions.push(user);
-                }
-              }
-            }
-          }
-        }
+      const selfAvailability = await getSelfAvailability(netId);
+      if (selfAvailability === null) {
+        return null;
       }
-      return companions;
+      if (selfAvailability[day] === undefined) {
+        return null;
+      }
+      return matchTime(netId, selfAvailability, usersData, day);
     }
   } catch (error) {
     // Handle any potential errors
