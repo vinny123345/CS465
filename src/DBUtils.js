@@ -157,6 +157,40 @@ export async function getCompanionsWithDate(day, netId) {
   }
 }
 
+export async function matchTime(netId, selfAvailability, usersData, day) {
+  const companions = [];
+  const selfStart = selfAvailability[day].startTime;
+  const selfEnd = selfAvailability[day].endTime;
+  for (const userId in usersData) {
+    const user = usersData[userId];
+    if (user.netid !== netId) {
+      const companionAvailability = user.availability;
+      if (
+        companionAvailability === null ||
+        companionAvailability === undefined
+      ) {
+        continue;
+      }
+      if (
+        companionAvailability[day] === null ||
+        companionAvailability[day] === undefined
+      ) {
+        continue;
+      } else {
+        const companionStart = companionAvailability[day].start;
+        const companionEnd = companionAvailability[day].end;
+        //check if the time overlaps
+        if (selfStart >= companionEnd || selfEnd <= companionStart) {
+          continue;
+        } else {
+          companions.push(user);
+        }
+      }
+    }
+  }
+  return companions;
+}
+
 
 
 export async function addUser(netid, userData) {
