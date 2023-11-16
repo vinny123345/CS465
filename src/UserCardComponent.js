@@ -22,8 +22,10 @@ export const UserCardSent = ({ userObject, onAccept, onReject }) => {
             {userObject.last_name} {userObject.first_name} ({userObject.netid})
           </Card.Title>
           <Card.Text>
-            {userObject.availability[0].start}-{userObject.availability[0].end}{" "}
-            @ {userObject.fav_locations}
+            {userObject.availability["Friday"].startTime}-
+            {userObject.availability["Friday"].endTime} @{" "}
+            {userObject.fav_locations}
+            {/* "Friday" is hardcoded for now */}
           </Card.Text>
         </Card.Body>
         <Card.Body>
@@ -46,9 +48,7 @@ export const UserCardSent = ({ userObject, onAccept, onReject }) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button variant="danger" style={{ float: "right" }}>
-              Reject
-            </Button>
+            {onReject ? <Button variant="success">Reject</Button> : <></>}
           </Popconfirm>
         </Card.Body>
       </Card>
