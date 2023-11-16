@@ -148,8 +148,7 @@ function ComfirmedPage() {
 
           if (effUserObj) {
 
-            let updatedEffUserReceivedList =
-              effUserObj.received_requests.filter((e) => e != currnetid);
+            let updatedEffUserReceivedList = effUserObj.received_requests.filter((e) => e != currnetid);
             console.log(updatedEffUserReceivedList);
             set(
               ref(db, `/users/${effectednetid}/received_requests`),
