@@ -131,6 +131,33 @@ export async function getSelfAvailability(netid) {
   }
 }
 
+export async function getSelfFavLocations(netid) {
+  try {
+    // Use the 'db' to query the database and fetch user data based on the 'netId'
+    const userRef = ref(db, `/users`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      // Extract and return the user data
+      const usersData = snapshot.val();
+      // Iterate through the users to find the one with the matching netid
+      for (const userId in usersData) {
+        const user = usersData[userId];
+        if (user.netid === netid) {
+          return user["fav_locations"];
+        }
+      }
+    } else {
+      // Handle the case when the user doesn't exist
+      return null;
+    }
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
+
 export async function getCompanionsWithDate(day, netId) {
   // Get all the potential companions based on the day of the week selected by the user and return them
   try {
@@ -142,13 +169,39 @@ export async function getCompanionsWithDate(day, netId) {
       const usersData = snapshot.val();
       // Iterate through the users to find the one with the matching netid
       const selfAvailability = await getSelfAvailability(netId);
-      if (selfAvailability === null) {
-        return null;
+      if (selfAvailability === null || selfAvailability === undefined) {
+        return [];
       }
-      if (selfAvailability[day] === undefined) {
-        return null;
+      if (
+        selfAvailability[day] === null ||
+        selfAvailability[day] === undefined
+      ) {
+        return [];
       }
-      return matchTime(netId, selfAvailability, usersData, day);
+      const companions = [];
+      // find all the companions tha match the day except the user himself
+      for (const userId in usersData) {
+        const user = usersData[userId];
+        if (user.netid !== netId) {
+          const companionAvailability = user.availability;
+          if (
+            companionAvailability === null ||
+            companionAvailability === undefined
+          ) {
+            continue;
+          }
+          if (
+            companionAvailability[day] === null ||
+            companionAvailability[day] === undefined
+          ) {
+            continue;
+          } else {
+            companions.push(user);
+          }
+        }
+      }
+      console.log(companions);
+      return companions;
     }
   } catch (error) {
     // Handle any potential errors
@@ -157,45 +210,52 @@ export async function getCompanionsWithDate(day, netId) {
   }
 }
 
-export async function matchTime(netId, selfAvailability, usersData, day) {
-  const companions = [];
-  const selfStart = selfAvailability[day].startTime;
-  const selfEnd = selfAvailability[day].endTime;
-  for (const userId in usersData) {
-    const user = usersData[userId];
-    if (user.netid !== netId) {
-      const companionAvailability = user.availability;
-      if (
-        companionAvailability === null ||
-        companionAvailability === undefined
-      ) {
-        continue;
-      }
-      if (
-        companionAvailability[day] === null ||
-        companionAvailability[day] === undefined
-      ) {
-        continue;
-      } else {
-        const companionStart = companionAvailability[day].start;
-        const companionEnd = companionAvailability[day].end;
-        //check if the time overlaps
-        if (selfStart >= companionEnd || selfEnd <= companionStart) {
-          continue;
-        } else {
-          companions.push(user);
-        }
-      }
+export async function filterTime(netId, companions, userSelectedDate) {
+  // Filter the companions based on the time selected by the user and return them
+  const selfAvailability = await getSelfAvailability(netId);
+  console.log(selfAvailability[userSelectedDate]);
+  const selfStart = selfAvailability[userSelectedDate].startTime;
+  const selfEnd = selfAvailability[userSelectedDate].endTime;
+  // delete the companions that don't have overlapping time with the user
+  companions.forEach((companion) => {
+    const companionAvailability = companion.availability;
+    const companionStart = companionAvailability[userSelectedDate].startTime;
+    const companionEnd = companionAvailability[userSelectedDate].endTime;
+    if (companionStart > selfEnd || companionEnd < selfStart) {
+      companions.splice(companions.indexOf(companion), 1);
     }
-  }
+  });
   return companions;
 }
 
+export async function filterLocation(netId, companions) {
+  const selfFavLocations = await getSelfFavLocations(netId);
+  if (!Array.isArray(selfFavLocations) || selfFavLocations.length === 0) {
+    return [];
+  }
 
+  // Filter out companions without overlapping favorite locations
+  const filteredCompanions = companions.filter((companion) => {
+    const companionFavLocations = companion.fav_locations;
+    if (
+      !Array.isArray(companionFavLocations) ||
+      companionFavLocations.length === 0
+    ) {
+      return false; // Exclude companions with no valid favorite locations
+    }
+
+    // Check for any overlapping location
+    return companionFavLocations.some((location) =>
+      selfFavLocations.includes(location)
+    );
+  });
+
+  return filteredCompanions;
+}
 
 export async function addUser(netid, userData) {
   try {
-    await set(ref(db, 'users/' + netid), userData);
+    await set(ref(db, "users/" + netid), userData);
     console.log("success");
   } catch (error) {
     // Handle any potential errors
@@ -206,14 +266,12 @@ export async function addUser(netid, userData) {
 
 export function getNetId(userObj) {
   try {
-    if(userObj)
-    {
-      const netid = userObj.email.split('@')[0];
+    if (userObj) {
+      const netid = userObj.email.split("@")[0];
       return netid;
     }
 
     return "";
-
   } catch (error) {
     // Handle any potential errors
     console.error("Error getting netid:", error);

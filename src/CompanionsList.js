@@ -1,20 +1,24 @@
-// CompanionsList component in CompanionsList.js
+import UserCardSent from "./UserCardComponent";
+
 const CompanionsList = ({ companions }) => {
   return (
     <div>
-      {companions.map((companion, index) => (
-        <div key={index} style={{ marginBottom: "10px" }}>
-          <p>
-            <strong>First Name:</strong> {companion.first_name}
-          </p>
-          <p>
-            <strong>Last Name:</strong> {companion.last_name}
-          </p>
-          <p>
-            <strong>NetID:</strong> {companion.netid}
-          </p>
-        </div>
-      ))}
+      <div className="companionsList">
+        {companions.length > 0 ? (
+          companions.map((e, i) => (
+            <UserCardSent
+              key={i}
+              userObject={e}
+              onAccept={() => {
+                console.log("accept");
+              }}
+              onReject={null}
+            />
+          ))
+        ) : (
+          <div>Cannot find companions based on your availability</div>
+        )}
+      </div>
     </div>
   );
 };
