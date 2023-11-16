@@ -163,3 +163,38 @@ export async function getCompanionsWithDate(day, netId) {
     throw error;
   }
 }
+
+
+
+export async function addUser(netid, userData) {
+  try {
+    await set(ref(db, 'users/' + netid), userData);
+    console.log("success");
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error adding user:", error);
+    throw error;
+  }
+}
+
+export function getNetId(userObj) {
+  try {
+    if(userObj)
+    {
+      const netid = userObj.email.split('@')[0];
+      return netid;
+    }
+
+    return "";
+
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error getting netid:", error);
+    return "";
+  }
+}
+
+export function getEmail(netid) {
+  const email = `${netid}@illinois.edu`;
+  return email;
+}

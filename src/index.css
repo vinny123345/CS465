@@ -77,3 +77,49 @@ code {
 .confirmlink {
   background-color: red;
 }
+
+.loginlink {
+  background-color:aqua;
+}
+
+.registerlink {
+  background-color:beige;
+}
+
+.logoutlink {
+  background-color:bisque
+}
+
+
+input {
+  display: block;
+  width: 310px;
+  padding: 6px;
+  border-radius: 6px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  border: 3px solid black;
+  margin-bottom: 14px;
+}
+
+button {
+  display: block;
+  padding: 14px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  background-color: black;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#login a, #register a {
+  color: black;
+  font-weight: bold;
+}
+
+.error {
+  padding: 9px;
+  border-radius: 3px;
+  background-color: pink;
+}
