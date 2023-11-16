@@ -100,7 +100,7 @@ export const Searchcontainer = () => {
           >
             Location Filter
           </button>
-          <CompanionsList companions={companions} />
+          <CompanionsList companions={companions} date={userSelectedDate} />
         </>
       ) : (
         <>

@@ -200,7 +200,6 @@ export async function getCompanionsWithDate(day, netId) {
           }
         }
       }
-      console.log(companions);
       return companions;
     }
   } catch (error) {
@@ -213,7 +212,6 @@ export async function getCompanionsWithDate(day, netId) {
 export async function filterTime(netId, companions, userSelectedDate) {
   // Filter the companions based on the time selected by the user and return them
   const selfAvailability = await getSelfAvailability(netId);
-  console.log(selfAvailability[userSelectedDate]);
   const selfStart = selfAvailability[userSelectedDate].startTime;
   const selfEnd = selfAvailability[userSelectedDate].endTime;
   // delete the companions that don't have overlapping time with the user

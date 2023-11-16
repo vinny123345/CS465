@@ -48,7 +48,13 @@ export const UserCardSent = ({ userObject, onAccept, onReject }) => {
             okText="Yes"
             cancelText="No"
           >
-            {onReject ? <Button variant="danger" style={{float: 'right'}}>Reject</Button> : <></>}
+            {onReject ? (
+              <Button variant="danger" style={{ float: "right" }}>
+                Reject
+              </Button>
+            ) : (
+              <></>
+            )}
           </Popconfirm>
         </Card.Body>
       </Card>
@@ -65,4 +71,84 @@ export const UserCardSent = ({ userObject, onAccept, onReject }) => {
   );
 };
 
-export default UserCardSent;
+export const UserCardSearch = ({
+  userObject,
+  onAccept,
+  onReject,
+  dayOfWeek,
+}) => {
+  // for user profile popup
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  if (
+    userObject.availability === null ||
+    userObject.availability === undefined
+  ) {
+    return null;
+  }
+  if (
+    userObject.availability[dayOfWeek] === null ||
+    userObject.availability[dayOfWeek] === undefined
+  ) {
+    return null;
+  }
+  return (
+    <>
+      <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
+        <Card.Body onClick={handleShow}>
+          <Card.Title>
+            {userObject.last_name} {userObject.first_name} ({userObject.netid})
+          </Card.Title>
+          <Card.Text>
+            {userObject.availability[dayOfWeek].startTime}-
+            {userObject.availability[dayOfWeek].endTime} @{" "}
+            {userObject.fav_locations}
+          </Card.Text>
+        </Card.Body>
+        <Card.Body>
+          <Popconfirm
+            title="Accept"
+            description="Are you sure to accept?"
+            onConfirm={onAccept}
+            // onCancel={console.log('cancel')}
+            okText="Yes"
+            cancelText="No"
+          >
+            {onAccept ? (
+              <Button variant="success">Send Invitation</Button>
+            ) : (
+              <></>
+            )}
+          </Popconfirm>
+
+          <Popconfirm
+            title="Delete"
+            description="Are you sure to reject?"
+            onConfirm={onReject}
+            // onCancel={console.log('cancel')}
+            okText="Yes"
+            cancelText="No"
+          >
+            {onReject ? (
+              <Button variant="danger" style={{ float: "right" }}>
+                Reject
+              </Button>
+            ) : (
+              <></>
+            )}
+          </Popconfirm>
+        </Card.Body>
+      </Card>
+
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {userObject.last_name} {userObject.first_name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+      </Modal>
+    </>
+  );
+};
