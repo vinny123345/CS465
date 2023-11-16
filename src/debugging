@@ -1,0 +1,14 @@
+1. // now you need put params in the url like 
+  // http://localhost:3000/profile/jones1 
+  // jones1 is just the netid
+
+2. make sure to npm install firebase: https://firebase.google.com/docs/web/setup
+and give your email to Huang who is the owner of the firebase db.
+
+3. when running the app, 'inspect' the code and set the ratio to phone size
+
+4. for each page if you want to retrive the data from db, 
+make user to use "useEffect" -- look at ProfileContainer.js for details.
+
+5. search for "TODO" and see if there is anything thing needed to be implemented
+notice this is not a comprehensive list of things, so there could be more to do.
