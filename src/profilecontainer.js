@@ -12,7 +12,7 @@ export const Profilecontainer = () => {
   // NEW: get the netid
   const { userObj, isLoading } = useUserLoggedIn();
   //const user = getNetId(userObj);
-  const { user } = useParams();
+  var { user } = useParams();
 
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({});
@@ -103,10 +103,11 @@ export const Profilecontainer = () => {
     return <div>Loading...</div>;
   }
 
-  const handleAvailabilityButtonClick = () => {
+  const handleAvailabilityButtonClick = async () => {
     setShowAvailabilityModal(true);
     setInitialAvailabilityView(true);
     // Set selected day, start time, and end time to current values from user data
+    setUserData(await getUser(user));
     setSelectedDay(userData.availability ? Object.keys(userData.availability)[0] : null);
     setStartTime(userData.availability ? userData.availability[selectedDay]?.startTime || null : null);
     setEndTime(userData.availability ? userData.availability[selectedDay]?.endTime || null : null);
@@ -114,10 +115,10 @@ export const Profilecontainer = () => {
 
   const handleSaveAvailability = async () => {
     try {
-      const latestUserData = await getUser(user);
+      var latestUserData = await getUser(user);
       if (selectedDay && startTime !== null && endTime !== null) {
         // Clone the existing availability object or create a new one if it doesn't exist
-        const existingAvailability = latestUserData.availability ? { ...latestUserData.availability } : {};
+        var existingAvailability = latestUserData.availability ? { ...latestUserData.availability } : {};
         console.log(userData.availability);
         // Update the selected day with the new availability
         existingAvailability[selectedDay] = {
