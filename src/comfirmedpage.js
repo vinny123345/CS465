@@ -44,12 +44,16 @@ function ComfirmedPage() {
         if (userobj) {
           setUserObject(userobj);
 
-          let sentlist = userobj.sent_requests.map((eid)=>{
-            return snapshot.val()[eid]
-          })
-          sentlist = sentlist.filter(
-            (e) => e
-          );
+          let sentlist = []
+          if (userobj.sent_requests){
+            sentlist = userobj.sent_requests.map((eid)=>{
+              return snapshot.val()[eid]
+            })
+            sentlist = sentlist.filter(
+              (e) => e
+            );
+          }
+
           console.log(sentlist)
 
 
@@ -73,12 +77,17 @@ function ComfirmedPage() {
           // sentlist.push(userobj)
           setSent(sentlist);
 
-          let receivedlist = userobj.received_requests.map((eid)=>{
-            return snapshot.val()[eid]
-          })
-          receivedlist = receivedlist.filter(
-            (e) => e
-          );
+          let receivedlist = []
+          if (userobj.received_requests){
+            receivedlist = userobj.received_requests.map((eid)=>{
+              return snapshot.val()[eid]
+            })
+            receivedlist = receivedlist.filter(
+              (e) => e
+            );
+          }
+          
+
           console.log(receivedlist)
           
           // snapshot.val().filter((e) => {
@@ -95,12 +104,15 @@ function ComfirmedPage() {
           // receivedlist.push(userobj)
           setReceived(receivedlist);
 
-          let confirmedlist = userobj.confirmed_requests.map((eid)=>{
-            return snapshot.val()[eid]
-          })
-          confirmedlist = confirmedlist.filter(
-            (e) => e
-          );
+          let confirmedlist = []
+          if (userobj.confirmed_requests){
+            confirmedlist = userobj.confirmed_requests.map((eid)=>{
+              return snapshot.val()[eid]
+            })
+            confirmedlist = confirmedlist.filter(
+              (e) => e
+            );
+          }
           console.log(confirmedlist)
           
           
