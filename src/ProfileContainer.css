@@ -13,7 +13,8 @@
     justify-content: space-between;
 }
 
-#avail-button, #location-button {
+#avail-button,
+#location-button {
     margin-top: 20%;
     width: auto;
 }
@@ -23,6 +24,15 @@
 }
 
 .profile-picture {
+    margin-right: 100%;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    /* background-color: #f3f3f3; */
+    margin-bottom: 1rem;
+}
+
+.default-profile-picture {
     margin-right: 100%;
     border-radius: 50%;
     width: 150px;
@@ -75,6 +85,10 @@ button {
     cursor: pointer;
 }
 
+/* .file-button {
+    padding-bottom: 10px;
+} */
+
 button:hover {
     background-color: #0056b3;
 }
@@ -90,7 +104,8 @@ button:hover {
     margin-top: .5rem;
 }
 
-#avail-modal, #loc-modal {
+#avail-modal,
+#loc-modal {
     top: 40%;
 }
 
