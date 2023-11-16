@@ -37,16 +37,25 @@ function ComfirmedPage() {
     onValue(userRef, (snapshot) => {
       if (snapshot.exists()) {
         console.log(snapshot.val());
+        console.log(user)
         setUsers(snapshot.val());
-        let userobj = snapshot.val().filter((e) => {
-          return e.netid == user;
-        });
-        if (userobj.length >= 1) {
-          userobj = userobj[0];
+        let userobj = snapshot.val()[user]
+
+        if (userobj) {
           setUserObject(userobj);
-          let sentlist = snapshot.val().filter((e) => {
-            return userobj.sent_requests.includes(e.netid);
-          });
+
+          let sentlist = userobj.sent_requests.map((eid)=>{
+            return snapshot.val()[eid]
+          })
+          sentlist = sentlist.filter(
+            (e) => e
+          );
+          console.log(sentlist)
+
+
+          // snapshot.val().filter((e) => {
+          //   return userobj.sent_requests.includes(e.netid);
+          // });
           // for testing only
           // sentlist.push(userobj)
           // sentlist.push(userobj)
@@ -64,9 +73,17 @@ function ComfirmedPage() {
           // sentlist.push(userobj)
           setSent(sentlist);
 
-          let receivedlist = snapshot.val().filter((e) => {
-            return userobj.received_requests.includes(e.netid);
-          });
+          let receivedlist = userobj.received_requests.map((eid)=>{
+            return snapshot.val()[eid]
+          })
+          receivedlist = receivedlist.filter(
+            (e) => e
+          );
+          console.log(receivedlist)
+          
+          // snapshot.val().filter((e) => {
+          //   return userobj.received_requests.includes(e.netid);
+          // });
           // for testing only
           // receivedlist.push(userobj)
           // receivedlist.push(userobj)
@@ -78,9 +95,18 @@ function ComfirmedPage() {
           // receivedlist.push(userobj)
           setReceived(receivedlist);
 
-          let confirmedlist = snapshot.val().filter((e) => {
-            return userobj.confirmed_requests.includes(e.netid);
-          });
+          let confirmedlist = userobj.confirmed_requests.map((eid)=>{
+            return snapshot.val()[eid]
+          })
+          confirmedlist = confirmedlist.filter(
+            (e) => e
+          );
+          console.log(confirmedlist)
+          
+          
+          // snapshot.val().filter((e) => {
+          //   return userobj.confirmed_requests.includes(e.netid);
+          // });
           // for testing only
           // confirmedlist.push(userobj)
           // confirmedlist.push(userobj)
@@ -113,44 +139,37 @@ function ComfirmedPage() {
   const sentReject = async (currnetid, effectednetid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val().length > 0) {
+        if (snapshot.exists()) {
           console.log("sentreject test start");
           console.log(snapshot.val());
           console.log("sentreject test finish");
 
           // current user: remove from current user - sent
-          let currUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == currnetid);
-          let currUserObj = snapshot.val().filter((e) => e.netid == currnetid);
-          if (currUserObj.length >= 1) {
-            currUserObj = currUserObj[0];
+
+
+          let currUserObj = snapshot.val()[currnetid];
+          if (currUserObj) {
             let updatedCurrUserSentList = currUserObj.sent_requests.filter(
               (e) => e != effectednetid
             );
             console.log(updatedCurrUserSentList);
             set(
-              ref(db, `/users/${currUserfbIndex}/sent_requests`),
+              ref(db, `/users/${currnetid}/sent_requests`),
               updatedCurrUserSentList
             );
           }
 
           // effected user: remove from target user - received
-          let effUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == effectednetid);
-          let effUserObj = snapshot
-            .val()
-            .filter((e) => e.netid == effectednetid);
 
-          if (effUserObj.length >= 1) {
-            effUserObj = effUserObj[0];
+          let effUserObj = snapshot.val()[effectednetid];
+
+          if (effUserObj) {
 
             let updatedEffUserReceivedList =
               effUserObj.received_requests.filter((e) => e != currnetid);
             console.log(updatedEffUserReceivedList);
             set(
-              ref(db, `/users/${effUserfbIndex}/received_requests`),
+              ref(db, `/users/${effectednetid}/received_requests`),
               updatedEffUserReceivedList
             );
           }
@@ -168,33 +187,24 @@ function ComfirmedPage() {
   const receivedAccept = async (currnetid, effectednetid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val().length > 0) {
+        if (snapshot.exists()) {
           // current user: move from received to confirmed
-          let currUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == currnetid);
-          let currUserObj = snapshot.val().filter((e) => e.netid == currnetid);
-          if (currUserObj.length >= 1) {
-            currUserObj = currUserObj[0];
+
+          let currUserObj = snapshot.val()[currnetid]
+          if (currUserObj) {
 
             currUserObj.received_requests =
               currUserObj.received_requests.filter((e) => e != effectednetid);
             currUserObj.confirmed_requests.push(effectednetid);
 
             console.log(currUserObj);
-            set(ref(db, `/users/${currUserfbIndex}`), currUserObj);
+            set(ref(db, `/users/${currnetid}`), currUserObj);
           }
 
           // effected user: move from sent to confirmed
-          let effUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == effectednetid);
-          let effUserObj = snapshot
-            .val()
-            .filter((e) => e.netid == effectednetid);
 
-          if (effUserObj.length >= 1) {
-            effUserObj = effUserObj[0];
+          let effUserObj = snapshot.val()[effectednetid]
+          if (effUserObj) {
 
             effUserObj.sent_requests = effUserObj.sent_requests.filter(
               (e) => e != currnetid
@@ -202,7 +212,7 @@ function ComfirmedPage() {
             effUserObj.confirmed_requests.push(currnetid);
 
             console.log(effUserObj);
-            set(ref(db, `/users/${effUserfbIndex}`), effUserObj);
+            set(ref(db, `/users/${effectednetid}`), effUserObj);
           }
         } else {
           console.log("No data available");
@@ -218,42 +228,33 @@ function ComfirmedPage() {
   const receivedReject = async (currnetid, effectednetid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val().length > 0) {
+        if (snapshot.exists()) {
           // current user: remove from received
-          let currUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == currnetid);
-          let currUserObj = snapshot.val().filter((e) => e.netid == currnetid);
-          if (currUserObj.length >= 1) {
-            currUserObj = currUserObj[0];
 
+          let currUserObj = snapshot.val()[currnetid]
+          if (currUserObj) {
             let updatedCurrUserList = currUserObj.received_requests.filter(
               (e) => e != effectednetid
             );
             console.log(updatedCurrUserList);
             set(
-              ref(db, `/users/${currUserfbIndex}/received_requests`),
+              ref(db, `/users/${currnetid}/received_requests`),
               updatedCurrUserList
             );
           }
 
           // effected user: remove from sent
-          let effUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == effectednetid);
-          let effUserObj = snapshot
-            .val()
-            .filter((e) => e.netid == effectednetid);
 
-          if (effUserObj.length >= 1) {
-            effUserObj = effUserObj[0];
+          let effUserObj = snapshot.val()[effectednetid]
+
+          if (effUserObj) {
 
             let updatedEffUserList = effUserObj.sent_requests.filter(
               (e) => e != currnetid
             );
             console.log(updatedEffUserList);
             set(
-              ref(db, `/users/${effUserfbIndex}/sent_requests`),
+              ref(db, `/users/${effectednetid}/sent_requests`),
               updatedEffUserList
             );
           }
@@ -271,42 +272,35 @@ function ComfirmedPage() {
   const confirmedReject = async (currnetid, effectednetid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
-        if (snapshot.exists() && snapshot.val().length > 0) {
+        if (snapshot.exists()) {
           // current user: remove from confirmed
-          let currUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == currnetid);
-          let currUserObj = snapshot.val().filter((e) => e.netid == currnetid);
-          if (currUserObj.length >= 1) {
-            currUserObj = currUserObj[0];
+
+          let currUserObj = snapshot.val()[currnetid]
+          if (currUserObj) {
 
             let updatedCurrUserList = currUserObj.confirmed_requests.filter(
               (e) => e != effectednetid
             );
             console.log(updatedCurrUserList);
             set(
-              ref(db, `/users/${currUserfbIndex}/confirmed_requests`),
+              ref(db, `/users/${currnetid}/confirmed_requests`),
               updatedCurrUserList
             );
           }
 
           // effected user: remove from confirmed
-          let effUserfbIndex = snapshot
-            .val()
-            .findIndex((e) => e.netid == effectednetid);
-          let effUserObj = snapshot
-            .val()
-            .filter((e) => e.netid == effectednetid);
 
-          if (effUserObj.length >= 1) {
-            effUserObj = effUserObj[0];
+          let effUserObj = snapshot
+            .val()[effectednetid]
+
+          if (effUserObj) {
 
             let updatedEffUserList = effUserObj.confirmed_requests.filter(
               (e) => e != currnetid
             );
             console.log(updatedEffUserList);
             set(
-              ref(db, `/users/${effUserfbIndex}/confirmed_requests`),
+              ref(db, `/users/${effectednetid}/confirmed_requests`),
               updatedEffUserList
             );
           }
