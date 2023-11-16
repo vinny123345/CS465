@@ -14,6 +14,9 @@ import { Profilecontainer } from "./profilecontainer";
 import { Searchcontainer } from "./searchcontainer";
 import ComfirmedPage from "./comfirmedpage";
 import { getUser } from "./DBUtils";
+import { LoginModule } from './Login';
+import { RegisterModule } from './Register';
+import { LogoutModule } from './Logout'; 
 
 import { initializeApp } from "firebase/app";
 
@@ -40,6 +43,11 @@ const App = () => {
   return (
     <div className="App">
       <h1 id="ieat">iEat</h1>
+      <div className= "logoutlink">
+                  <Link to = {`/logout`}
+                    id = "link5"> Logout
+                  </Link>
+      </div>
       <div className="navtab">
         <div className="profilelink">
           <Link to={`/profile/${user}`} id="link1">
@@ -68,6 +76,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Routes>
+      <Route path= "" element={<RegisterModule />} /> 
+      <Route path= "/login" element={<LoginModule />} /> 
+      <Route path= "/register" element={<RegisterModule />} /> 
+      <Route path= "/logout" element={<LogoutModule />} /> 
       <Route path="/" element={<App />}>
         <Route path=":user" element={<Profilecontainer />} />
         <Route path="profile/:user" element={<Profilecontainer />} />

@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getUser, updateUser } from "./DBUtils";
+import { getUser, updateUser, getNetId} from "./DBUtils";
 import './ProfileContainer.css';
 import {Button, Modal, Nav, Tab, ListGroup, Form} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+import {useUserLoggedIn} from './UserLoggedIn';
 
 export const Profilecontainer = () => {
+  // NEW: get the netid
+  const { userObj, isLoading } = useUserLoggedIn();
+  //const user = getNetId(userObj);
   const { user } = useParams();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    first_name: "test",
-    last_name: "test",
-    gender: "test",
-    grade: "test",
-    major: "test",
-    profile_pic: "test",
-    netid: "test",
-  });
+  const [userData, setUserData] = useState({});
   const [initialAvailabilityView, setInitialAvailabilityView] = useState(true);
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -37,9 +34,13 @@ export const Profilecontainer = () => {
     const fetchData = async () => {
       try {
         const data = await getUser(user);
+        console.log(user);
+        console.log(data);
         setUserData(data);
-        console.log(data.availability[2]);
-        console.log(data.fav_locations);
+        console.log(userData);
+        if (data.first_name === "firstname") {
+          setIsEditing(true);
+        }
         if (data.availability) {
           const days = Object.keys(data.availability);
           const selectedDay = days.length > 0 ? days[0] : null;
@@ -113,10 +114,11 @@ export const Profilecontainer = () => {
 
   const handleSaveAvailability = async () => {
     try {
+      const latestUserData = await getUser(user);
       if (selectedDay && startTime !== null && endTime !== null) {
         // Clone the existing availability object or create a new one if it doesn't exist
-        const existingAvailability = userData.availability ? { ...userData.availability } : {};
-  
+        const existingAvailability = latestUserData.availability ? { ...latestUserData.availability } : {};
+        console.log(userData.availability);
         // Update the selected day with the new availability
         existingAvailability[selectedDay] = {
           startTime: startTime,
@@ -131,7 +133,7 @@ export const Profilecontainer = () => {
   
         await updateUser(user, updatedUserData);
   
-        console.log(`Saved availability for ${selectedDay}: ${startTime} - ${endTime}`);
+        //console.log(`Saved availability for ${selectedDay}: ${startTime} - ${endTime}`);
       }
 
       setSelectedDay(null);
@@ -169,8 +171,10 @@ export const Profilecontainer = () => {
   const handleRemoveLocation = async () => {
     try {
       // Update user data with favorites
+      //const latestUserData = await getUser(user);
+      //const ex = latestUserData.availability ? { ...latestUserData.availability } : {};
+
       const updatedUserData = {
-        ...userData,
         fav_locations: fav_locations,
       };
   
@@ -322,7 +326,7 @@ export const Profilecontainer = () => {
                   <option value="11:00 AM">11:00 AM</option>
                   <option value="11:30 AM">11:30 AM</option>
                   <option value="12:00 PM">12:00 PM</option>
-                  <option value="12:30 AM">12:30 PM</option>
+                  <option value="12:30 PM">12:30 PM</option>
                   <option value="1:00 PM">1:00 PM</option>
                   <option value="1:30 PM">1:30 PM</option>
                   <option value="2:00 PM">2:00 PM</option>
@@ -342,7 +346,7 @@ export const Profilecontainer = () => {
                   <option value="11:00 AM">11:00 AM</option>
                   <option value="11:30 AM">11:30 AM</option>
                   <option value="12:00 PM">12:00 PM</option>
-                  <option value="12:30 AM">12:30 PM</option>
+                  <option value="12:30 PM">12:30 PM</option>
                   <option value="1:00 PM">1:00 PM</option>
                   <option value="1:30 PM">1:30 PM</option>
                   <option value="2:00 PM">2:00 PM</option>
