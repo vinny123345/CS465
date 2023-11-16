@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getUser, updateUser } from "./DBUtils";
+import { getUser, updateUser, getNetId } from "./DBUtils";
 import './ProfileContainer.css';
 import { Button, Modal, Nav, Tab, ListGroup, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+import { useUserLoggedIn } from './UserLoggedIn';
 
 export const Profilecontainer = () => {
-  const { user } = useParams();
+  // NEW: get the netid
+  const { userObj, isLoading } = useUserLoggedIn();
+  //const user = getNetId(userObj);
+  var { user } = useParams();
+
   const [isEditing, setIsEditing] = useState(false);
-  const [userData, setUserData] = useState({
-    first_name: "test",
-    last_name: "test",
-    gender: "test",
-    grade: "test",
-    major: "test",
-    profile_pic: "test",
-    netid: "test",
-  });
+  const [userData, setUserData] = useState({});
   const [initialAvailabilityView, setInitialAvailabilityView] = useState(true);
   const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -37,9 +34,13 @@ export const Profilecontainer = () => {
     const fetchData = async () => {
       try {
         const data = await getUser(user);
+        console.log(user);
+        console.log(data);
         setUserData(data);
-        console.log(data.availability[2]);
-        console.log(data.fav_locations);
+        console.log(userData);
+        if (data.first_name === "firstname") {
+          setIsEditing(true);
+        }
         if (data.availability) {
           const days = Object.keys(data.availability);
           const selectedDay = days.length > 0 ? days[0] : null;
@@ -102,10 +103,11 @@ export const Profilecontainer = () => {
     return <div>Loading...</div>;
   }
 
-  const handleAvailabilityButtonClick = () => {
+  const handleAvailabilityButtonClick = async () => {
     setShowAvailabilityModal(true);
     setInitialAvailabilityView(true);
     // Set selected day, start time, and end time to current values from user data
+    setUserData(await getUser(user));
     setSelectedDay(userData.availability ? Object.keys(userData.availability)[0] : null);
     setStartTime(userData.availability ? userData.availability[selectedDay]?.startTime || null : null);
     setEndTime(userData.availability ? userData.availability[selectedDay]?.endTime || null : null);
@@ -113,6 +115,7 @@ export const Profilecontainer = () => {
 
   const handleSaveAvailability = async () => {
     try {
+      var latestUserData = await getUser(user);
       if (selectedDay && startTime !== null && endTime !== null) {
         // Clone the existing availability object or create a new one if it doesn't exist
         const existingAvailability = userData.availability ? { ...userData.availability } : {};
@@ -169,8 +172,10 @@ export const Profilecontainer = () => {
   const handleRemoveLocation = async () => {
     try {
       // Update user data with favorites
+      //const latestUserData = await getUser(user);
+      //const ex = latestUserData.availability ? { ...latestUserData.availability } : {};
+
       const updatedUserData = {
-        ...userData,
         fav_locations: fav_locations,
       };
 
@@ -215,16 +220,17 @@ export const Profilecontainer = () => {
                     onChange={handleImageChange}
                   ></input>
                 </div>
-                <div className={userData.profile_pic === "" ? 'default-profile-picture' : 'profile-picture'}>
+                <div className={userData.profile_pic === "default" ? 'default-profile-picture' : 'profile-picture'}>
                   {/* <div className="profile-picture"> */}
-                  {userData.profile_pic && <img src={userData.profile_pic} alt="Profile" />}
+                  {userData.profile_pic !== "default" && <img src={userData.profile_pic} alt="Profile" />}
                 </div>
               </div>
             ) : (
               // <div className="profile-picture">
-              <div className={userData.profile_pic === "" ? 'default-profile-picture' : 'profile-picture'}>
+              <div className={userData.profile_pic === "default" ? 'default-profile-picture' : 'profile-picture'}>
                 {/* Render image from Base64 string */}
-                {userData.profile_pic && <img src={userData.profile_pic} alt="Profile_Image" />}
+                {userData.profile_pic !== "default" && <img src={userData.profile_pic} alt="Profile_Image" />}
+                {/* {console.log(userData.profile_pic)} */}
               </div>
               // <div className="profile-picture">{userData.profile_pic}</div>
             )}

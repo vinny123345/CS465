@@ -26,8 +26,6 @@ const CalendarComponent = ({ onSaveDate }) => {
   };
 
   const handleSaveDate = () => {
-    console.log("Selected Date:", selectedDate);
-
     setPrevSelectedDate(selectedDate);
     setDateSaved(true);
     setCalendarVisibility(false);

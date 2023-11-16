@@ -1,6 +1,15 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-import { ref, query, orderByChild, equalTo, get, set, update } from "firebase/database";
+import { type } from "@testing-library/user-event/dist/type";
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
+import {
+  ref,
+  query,
+  orderByChild,
+  equalTo,
+  get,
+  set,
+  update,
+} from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
@@ -108,7 +117,34 @@ export async function getSelfAvailability(netid) {
       for (const userId in usersData) {
         const user = usersData[userId];
         if (user.netid === netid) {
-          return user.availability;
+          return user["availability"];
+        }
+      }
+    } else {
+      // Handle the case when the user doesn't exist
+      return null;
+    }
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
+
+export async function getSelfFavLocations(netid) {
+  try {
+    // Use the 'db' to query the database and fetch user data based on the 'netId'
+    const userRef = ref(db, `/users`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      // Extract and return the user data
+      const usersData = snapshot.val();
+      // Iterate through the users to find the one with the matching netid
+      for (const userId in usersData) {
+        const user = usersData[userId];
+        if (user.netid === netid) {
+          return user["fav_locations"];
         }
       }
     } else {
@@ -128,30 +164,39 @@ export async function getCompanionsWithDate(day, netId) {
     // Iterate through the users to find all with the matching netid
     const usersRef = ref(db, `/users`);
     const snapshot = await get(usersRef);
-    // companion is a set of objects
-    const companions = [];
     if (snapshot.exists()) {
       // Extract and return the user data
       const usersData = snapshot.val();
       // Iterate through the users to find the one with the matching netid
-      const selfAvailability = getSelfAvailability(netId); // 2 is hard coded for now
+      const selfAvailability = await getSelfAvailability(netId);
+      if (selfAvailability === null || selfAvailability === undefined) {
+        return [];
+      }
+      if (
+        selfAvailability[day] === null ||
+        selfAvailability[day] === undefined
+      ) {
+        return [];
+      }
+      const companions = [];
+      // find all the companions tha match the day except the user himself
       for (const userId in usersData) {
         const user = usersData[userId];
         if (user.netid !== netId) {
           const companionAvailability = user.availability;
-          for (const i in selfAvailability) {
-            const selfTimeSlot = selfAvailability[i];
-            for (const j in companionAvailability) {
-              const companionTimeSlot = companionAvailability[j];
-              if (selfTimeSlot.day === day && companionTimeSlot.day === day) {
-                if (
-                  selfTimeSlot.start <= companionTimeSlot.end &&
-                  selfTimeSlot.end >= companionTimeSlot.start
-                ) {
-                  companions.push(user);
-                }
-              }
-            }
+          if (
+            companionAvailability === null ||
+            companionAvailability === undefined
+          ) {
+            continue;
+          }
+          if (
+            companionAvailability[day] === null ||
+            companionAvailability[day] === undefined
+          ) {
+            continue;
+          } else {
+            companions.push(user);
           }
         }
       }
@@ -162,4 +207,77 @@ export async function getCompanionsWithDate(day, netId) {
     console.error("Error fetching companions:", error);
     throw error;
   }
+}
+
+export async function filterTime(netId, companions, userSelectedDate) {
+  // Filter the companions based on the time selected by the user and return them
+  const selfAvailability = await getSelfAvailability(netId);
+  const selfStart = selfAvailability[userSelectedDate].startTime;
+  const selfEnd = selfAvailability[userSelectedDate].endTime;
+  // delete the companions that don't have overlapping time with the user
+  companions.forEach((companion) => {
+    const companionAvailability = companion.availability;
+    const companionStart = companionAvailability[userSelectedDate].startTime;
+    const companionEnd = companionAvailability[userSelectedDate].endTime;
+    if (companionStart > selfEnd || companionEnd < selfStart) {
+      companions.splice(companions.indexOf(companion), 1);
+    }
+  });
+  return companions;
+}
+
+export async function filterLocation(netId, companions) {
+  const selfFavLocations = await getSelfFavLocations(netId);
+  if (!Array.isArray(selfFavLocations) || selfFavLocations.length === 0) {
+    return [];
+  }
+
+  // Filter out companions without overlapping favorite locations
+  const filteredCompanions = companions.filter((companion) => {
+    const companionFavLocations = companion.fav_locations;
+    if (
+      !Array.isArray(companionFavLocations) ||
+      companionFavLocations.length === 0
+    ) {
+      return false; // Exclude companions with no valid favorite locations
+    }
+
+    // Check for any overlapping location
+    return companionFavLocations.some((location) =>
+      selfFavLocations.includes(location)
+    );
+  });
+
+  return filteredCompanions;
+}
+
+export async function addUser(netid, userData) {
+  try {
+    await set(ref(db, "users/" + netid), userData);
+    console.log("success");
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error adding user:", error);
+    throw error;
+  }
+}
+
+export function getNetId(userObj) {
+  try {
+    if (userObj) {
+      const netid = userObj.email.split("@")[0];
+      return netid;
+    }
+
+    return "";
+  } catch (error) {
+    // Handle any potential errors
+    console.error("Error getting netid:", error);
+    return "";
+  }
+}
+
+export function getEmail(netid) {
+  const email = `${netid}@illinois.edu`;
+  return email;
 }
