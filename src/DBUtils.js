@@ -134,7 +134,7 @@ export async function getCompanionsWithDate(day, netId) {
       // Extract and return the user data
       const usersData = snapshot.val();
       // Iterate through the users to find the one with the matching netid
-      const selfAvailability = getSelfAvailability(netId); // 2 is hard coded for now
+      const selfAvailability = await getSelfAvailability(netId); // 2 is hard coded for now
       for (const userId in usersData) {
         const user = usersData[userId];
         if (user.netid !== netId) {
