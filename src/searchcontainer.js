@@ -37,9 +37,8 @@ export const Searchcontainer = () => {
   };
 
   const applyFilters = async () => {
-    let filteredCompanions = [...originalCompanions];
-    console.log("originalCompanions", originalCompanions);
-    console.log("filteredCompanions", filteredCompanions);
+    // Performing a deep copy of originalCompanions
+    let filteredCompanions = originalCompanions.map((comp) => ({ ...comp }));
     if (isTimeFilterApplied) {
       filteredCompanions = await filterTime(
         userData.netid,
