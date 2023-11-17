@@ -1,0 +1,64 @@
+/* login.css */
+
+#login {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+#login h1 {
+    text-align: center;
+    color: #1d3557;
+    margin-bottom: 20px;
+}
+
+#login .error {
+    color: #d9534f;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#login input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #a8dadc;
+    box-sizing: border-box;
+}
+
+#login button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #1d3557;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#login button:hover {
+    background-color: #457b9d;
+}
+
+#login a {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #1d3557;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#login a:hover {
+    color: #457b9d;
+}

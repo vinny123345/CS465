@@ -1,0 +1,37 @@
+/* Logout.css */
+
+.error {
+    color: #e63946;
+    /* Accent color for error messages */
+    background-color: #f1faee;
+    /* Light background for contrast */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #e63946;
+    /* Border color similar to text color */
+    margin: 20px;
+    text-align: center;
+}
+
+div {
+    text-align: center;
+    /* margin-top: 50px; */
+}
+
+h1 {
+    color: #1d3557;
+    /* Dark blue for headers */
+    margin-bottom: 20px;
+}
+
+a {
+    color: #457b9d;
+    /* Medium blue for links */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    color: #1d3557;
+    /* Dark blue on hover for contrast */
+}
