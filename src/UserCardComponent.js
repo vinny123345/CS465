@@ -108,8 +108,8 @@ export const UserCardSearch = ({
         </Card.Body>
         <Card.Body>
           <Popconfirm
-            title="Accept"
-            description="Are you sure to accept?"
+            title="Invitation"
+            description="Are you sure to invite?"
             onConfirm={onAccept}
             // onCancel={console.log('cancel')}
             okText="Yes"
