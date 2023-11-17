@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { addUser, getEmail } from './DBUtils';
+import './Register.css'
 
 export const RegisterModule = () => {
     const [netid, setNetid] = useState('');
@@ -18,9 +19,9 @@ export const RegisterModule = () => {
                 return;
             }
 
-            const email = getEmail(netid);           
+            const email = getEmail(netid);
             await createUserWithEmailAndPassword(getAuth(), email, password);
-            await addUser(netid, { 
+            await addUser(netid, {
                 netid: netid,
                 confirmed_requests: [],
                 availability: null,
@@ -42,24 +43,24 @@ export const RegisterModule = () => {
 
     return (
         <div id="register">
-        <h1>Register</h1>
-        {error && <p className="error">{error}</p>}
-        <input
-            placeholder="Netid"
-            value={netid}
-            onChange={e => setNetid(e.target.value)} />
-        <input
-            type="password"
-            placeholder="Password - must be at least 6 characters"
-            value={password}
-            onChange={e => setPassword(e.target.value)} />
-        <input
-            type="password"
-            placeholder="Re-enter password"
-            value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)} />
-        <button onClick={createAccount}>Create Account</button>
-        <Link to="/login">Already have an account? Log in here</Link>
+            <h1>Register</h1>
+            {error && <p className="error">{error}</p>}
+            <input
+                placeholder="Netid"
+                value={netid}
+                onChange={e => setNetid(e.target.value)} />
+            <input
+                type="password"
+                placeholder="Password - must be at least 6 characters"
+                value={password}
+                onChange={e => setPassword(e.target.value)} />
+            <input
+                type="password"
+                placeholder="Re-enter password"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)} />
+            <button onClick={createAccount}>Create Account</button>
+            <Link to="/login">Already have an account? Log in here</Link>
         </div>
     );
 }

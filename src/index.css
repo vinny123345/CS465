@@ -1,120 +1,95 @@
-body {
-  margin: 0;
+/* App.css */
+
+.App {
   font-family: 'Montserrat', sans-serif;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Montserrat',
-    monospace;
-}
-
-img {
-  width: 75%; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
+  /* background-color: #f1faee; */
+  /* Lightest color for the background */
+  color: #1d3557;
+  /* Dark blue for text */
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px; /* Adjust padding as needed */
+  /* padding: 10px; */
+  background-color: #457b9d;
+  /* Medium blue for header */
+  color: white;
 }
+
+.header-container img {
+  height: 50px;
+  /* Adjust as needed */
+  width: auto;
+}
+
+.logoutlink .btn-primary {
+  background-color: #e63946;
+  /* Accent color for logout button */
+  border: none;
+}
+
 
 .navtab {
   position: fixed;
-  width: 100%;
+  font-size: 0.9em;
+  /* Fixing the navbar to a position */
   bottom: 0;
+  /* Aligning it to the bottom of the screen */
+  left: 0;
+  width: 100%;
+  /* Ensuring it spans the full width of the screen */
   display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
+  justify-content: space-around;
+  background-color: #a8dadc;
+  /* Light blue for navigation tab */
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  /* Optional: Adding a subtle shadow for depth */
+  z-index: 1000;
+  /* Ensures the navbar is above other content */
 }
 
-.profilelink, .confirmlink, .searchlink {
-  padding-top: 5vw;
-  padding-bottom: 5vw;
-  width: 33.33333333%;
+.navtab div {
+  flex: 1;
   text-align: center;
 }
 
-#link1, #link2, #link3 {
+.navtab a {
+  color: #1d3557;
+  /* Dark blue for links */
   text-decoration: none;
-  color: black;
+  font-size: 1.1em;
 }
 
-.profilelink {
-  background-color: blue;
-}
-
-.searchlink {
-  background-color: green;
-}
-
-.confirmlink {
-  background-color: red;
-}
-
-.confirm {
-  display: flex;
-  flex-direction: column;
-}
-
-.confirmnavtab {
-  width: 100vw;
-  top: 10%;
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
-}
-
-.sentlink, .confirmlink, .receivedlink {
-  padding-top: 5vw;
-  padding-bottom: 5vw;
-  width: 33.33333333%;
-  text-align: center;
-}
-
-.sentlink {
-  background-color: blue;
-}
-
-.receivedlink {
-  background-color: green;
-}
-
-.confirmlink {
-  background-color: red;
-}
-
-
-input {
-  display: block;
-  width: 310px;
-  padding: 6px;
-  border-radius: 6px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  border: 3px solid black;
-  margin-bottom: 14px;
-}
-
-button {
-  display: block;
-  padding: 14px;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  background-color: black;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#login a, #register a {
-  color: black;
+.navtab a:hover {
+  color: #ffffff;
+  /* White text for high contrast */
+  background-color: #1d3557;
+  /* Dark blue background for standout effect */
+  padding: 10px;
+  /* Add some padding for a button-like appearance */
+  border-radius: 4px;
+  /* Rounded corners for a smooth look */
   font-weight: bold;
+  /* Make the font bold */
+  text-decoration: none;
+  /* Remove underline */
+  transition: all 0.3s ease;
+  /* Smooth transition for hover effect */
 }
 
-.error {
-  padding: 9px;
-  border-radius: 3px;
-  background-color: pink;
+
+.navtab .profilelink,
+.navtab .searchlink,
+.navtab .confirmlink {
+  padding: 10px;
+}
+
+/* FontAwesome Icon Styles */
+.navtab .faIcon {
+  margin-right: 5px;
+  color: #e63946;
+  /* Accent color for icons */
 }
