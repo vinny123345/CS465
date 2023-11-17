@@ -19,12 +19,12 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow}>
           <Card.Title>
-            {userObject.last_name} {userObject.first_name} ({userObject.netid})
+            {userObject.last_name ? userObject.last_name : 'Last Name'} {userObject.first_name ? userObject.first_name : 'First Name'} ({userObject.netid ? userObject.netid : 'netid'})
           </Card.Title>
           <Card.Text>
-            {userObject.availability["Friday"].startTime}-
-            {userObject.availability["Friday"].endTime} @{" "}
-            {userObject.fav_locations}
+            {requestObject.date ? requestObject.date : 'Date'}:
+            {requestObject.time ? requestObject.time : 'time'} @{" "}
+            {requestObject.location ? requestObject.location : 'location'}
             {/* "Friday" is hardcoded for now */}
           </Card.Text>
         </Card.Body>
@@ -50,7 +50,7 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
           >
             {onReject ? (
               <Button variant="danger" style={{ float: "right" }}>
-                Reject
+                Cancel
               </Button>
             ) : (
               <></>
@@ -62,10 +62,18 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {userObject.last_name} {userObject.first_name}
+          {userObject.last_name ? userObject.last_name : 'Last Name'} {userObject.first_name ? userObject.first_name : 'First Name'} ({userObject.netid ? userObject.netid : 'netid'})
+
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+        {requestObject.date ? requestObject.date : 'Date'}:
+            {requestObject.time ? requestObject.time : 'time'} @{" "}
+            {requestObject.location ? requestObject.location : 'location'}
+        </Modal.Body>
+        <Modal.Footer>
+          Contact {userObject.first_name ? userObject.first_name : 'First Name'} at {userObject.netid ? userObject.netid : 'netid'}@illinois.edu !
+        </Modal.Footer>
       </Modal>
     </>
   );
