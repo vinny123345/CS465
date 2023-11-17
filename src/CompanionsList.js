@@ -38,6 +38,9 @@ const sendInvitation = async (
         //if (currUserObj) {
         // Generate a unique key for the new request
         const newRequestId = generateUniqueKey();
+        console.log("hihiehfiefef start")
+        console.log(commonTime)
+        console.log("hihiehfiefef end")
 
         // Create an object with the new request using the unique key
         const newRequest = {
@@ -143,6 +146,11 @@ const findCommonTime = async (userid, companion, dayOfWeek) => {
   const companionStart = companionAvailability[dayOfWeek].startTime;
   const companionEnd = companionAvailability[dayOfWeek].endTime;
   // handle the case of every undefined and null
+  console.log("testing here")
+  console.log(userStart)
+  console.log(userEnd)
+  console.log(companionStart)
+  console.log(companionEnd)
   if (
     userStart === null ||
     userStart === undefined ||
@@ -171,10 +179,35 @@ const findCommonTime = async (userid, companion, dayOfWeek) => {
       endTime: companionEnd,
     };
   } else {
+    console.log(Math.max(new Date(`2020-01-01 ${userStart}`), new Date(`2020-01-01 ${companionStart}`)))
+    console.log(typeof(userStart))
+    console.log(typeof(companionStart))
+    const start1 = new Date(`2020-01-01 ${userStart}`)
+    const start2 = new Date(`2020-01-01 ${companionStart}`)
+    const end1 = new Date(`2020-01-01 ${userEnd}`)
+    const end2 = new Date(`2020-01-01 ${companionEnd}`)
+    let startTimeR = companionStart;
+    let endTimeR = userEnd;
+    
+    if (start1 < start2) {
+      startTimeR = companionStart;
+
+    } else{
+      startTimeR = userStart;
+    }
+
+    if (end1 < end2) {
+       endTimeR = userEnd;
+    } else{
+       endTimeR = companionEnd;
+    }
+      
     return {
-      startTime: Math.max(userStart, companionStart),
-      endTime: Math.min(userEnd, companionEnd),
-    };
+      startTime: startTimeR,
+      endTime: endTimeR,
+
+    }
+    
   }
 };
 
@@ -218,9 +251,10 @@ const CompanionsList = ({ companions, date }) => {
           let currUserObj = snapshot.val()[user];
           if (currUserObj && currUserObj.sent_requests) {
             const sentRequests = currUserObj.sent_requests;
-            const updatedCompanions = companions.filter(
-              (companion) => !sentRequests.includes(companion.netid)
-            );
+            const updatedCompanions = companions
+            // .filter(
+            //   // (companion) => !sentRequests.includes(companion.netid)
+            // );
             setFilteredCompanions(updatedCompanions);
           } else {
             setFilteredCompanions(companions);
@@ -246,13 +280,13 @@ const CompanionsList = ({ companions, date }) => {
               <UserCardSearch
                 key={i}
                 userObject={e}
-                onAccept={() => {
+                onAccept={async () => {
                   sendInvitation(
                     user,
                     e,
                     dayOfWeek,
-                    findCommonTime(user, e, dayOfWeek),
-                    findCommonLocation(user, e)
+                    await findCommonTime(user, e, dayOfWeek),
+                    await findCommonLocation(user, e)
                   );
                 }}
                 onReject={null}

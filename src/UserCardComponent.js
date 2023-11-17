@@ -23,7 +23,7 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
           </Card.Title>
           <Card.Text>
             {requestObject.date ? requestObject.date : 'Date'}:
-            {requestObject.time ? requestObject.time : 'time'} @{" "}
+            {requestObject.time ? requestObject.time.startTime + '-' + requestObject.time.endTime : 'time'} @{" "}
             {requestObject.location ? requestObject.location : 'location'}
             {/* "Friday" is hardcoded for now */}
           </Card.Text>
@@ -68,7 +68,7 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
         </Modal.Header>
         <Modal.Body>
         {requestObject.date ? requestObject.date : 'Date'}:
-            {requestObject.time ? requestObject.time : 'time'} @{" "}
+        {requestObject.time ? requestObject.time.startTime + '-' + requestObject.time.endTime : 'time'} @{" "}
             {requestObject.location ? requestObject.location : 'location'}
         </Modal.Body>
         <Modal.Footer>
