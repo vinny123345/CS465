@@ -23,122 +23,124 @@ const sendInvitation = async (
   commonTime,
   commonLocation
 ) => {
-  get(ref(db, `/users`))
-    .then(async (snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-        console.log(user);
-
-        const currnetid = user;
-        const effectednetid = companion.netid;
-
-        // current user: append to send requests
-
-        let currUserObj = snapshot.val()[currnetid];
-        //if (currUserObj) {
-        // Generate a unique key for the new request
-        const newRequestId = generateUniqueKey();
-        console.log("hihiehfiefef start")
-        console.log(commonTime)
-        console.log("hihiehfiefef end")
-
-        // Create an object with the new request using the unique key
-        const newRequest = {
-          requestId: newRequestId,
-          netid: effectednetid,
-          time: commonTime,
-          date: dayOfWeek,
-          location: commonLocation,
-          // Other properties of the request...
-        };
-        console.log(newRequest);
-        // TODO: get the current sent_reuquests
-        // TODO: push the newRquest object into the requests
-
-        // Update the requests object in the database
-        //await set(ref(db, "users/" + netid), userData);
-        await set(
-          ref(db, `/users/${currnetid}/sent_requests/` + newRequestId),
-          newRequest
-        );
-
-        // } else {
-        //   console.log("No data available for the current user");
-        // }
-
-        // effected user: append to received requests
-
-        let effUserObj = snapshot.val()[effectednetid];
-        //if (effUserObj) {
-        // Use the same key for the new request
-
-        // Create an object with the new request using the unique key
-        const anotherRequest = {
-          requestId: newRequestId,
-          netid: currnetid,
-          time: commonTime,
-          date: dayOfWeek,
-          location: commonLocation,
-          // Other properties of the request...
-        };
-        // TODO: get the current sent_reuquests
-        // TODO: push the newRquest object into the requests
-
-        // Update the requests object in the database
-        //await set(ref(db, "users/" + netid), userData);
-        await set(
-          ref(db, `/users/${effectednetid}/received_requests/` + newRequestId),
-          anotherRequest
-        );
-
-        // } else {
-        //   console.log("No data available for the current user");
-        // }
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const checkSentRequests = (user, companions) => {
-  // check the database to see if the companions list includes the sent requests
   try {
-    get(ref(db, `/users`))
-      .then(async (snapshot) => {
-        if (snapshot.exists()) {
-          const netid = user;
-          let currUserObj = snapshot.val()[netid];
-          if (currUserObj) {
-            let sent_requests = currUserObj.sent_requests;
-            if (sent_requests) {
-              // Iterate through the companions list in reverse order
-              for (let j = companions.length - 1; j >= 0; j--) {
-                if (sent_requests.includes(companions[j].netid)) {
-                  companions.splice(j, 1); // Remove the companion if in sent_requests
-                }
-              }
-            }
-          }
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const snapshot = await get(ref(db, `/users`));
+    if (snapshot.exists()) {
+      console.log(snapshot.val());
+      console.log(user);
+
+      const currnetid = user;
+      const effectednetid = companion.netid;
+
+      // current user: append to send requests
+
+      let currUserObj = snapshot.val()[currnetid];
+      //if (currUserObj) {
+      // Generate a unique key for the new request
+      const newRequestId = generateUniqueKey();
+      console.log("hihiehfiefef start");
+      console.log(commonTime);
+      console.log("hihiehfiefef end");
+
+      // Create an object with the new request using the unique key
+      const newRequest = {
+        requestId: newRequestId,
+        netid: effectednetid,
+        time: commonTime,
+        date: dayOfWeek,
+        location: commonLocation,
+        // Other properties of the request...
+      };
+      console.log(newRequest);
+      // TODO: get the current sent_reuquests
+      // TODO: push the newRquest object into the requests
+
+      // Update the requests object in the database
+      //await set(ref(db, "users/" + netid), userData);
+      await set(
+        ref(db, `/users/${currnetid}/sent_requests/` + newRequestId),
+        newRequest
+      );
+
+      // } else {
+      //   console.log("No data available for the current user");
+      // }
+
+      // effected user: append to received requests
+
+      let effUserObj = snapshot.val()[effectednetid];
+      //if (effUserObj) {
+      // Use the same key for the new request
+
+      // Create an object with the new request using the unique key
+      const anotherRequest = {
+        requestId: newRequestId,
+        netid: currnetid,
+        time: commonTime,
+        date: dayOfWeek,
+        location: commonLocation,
+        // Other properties of the request...
+      };
+      // TODO: get the current sent_reuquests
+      // TODO: push the newRquest object into the requests
+
+      // Update the requests object in the database
+      //await set(ref(db, "users/" + netid), userData);
+      await set(
+        ref(db, `/users/${effectednetid}/received_requests/` + newRequestId),
+        anotherRequest
+      );
+      return Promise.resolve();
+    } else {
+      console.log("No data available");
+      return Promise.reject(new Error("No data available"));
+    }
   } catch (error) {
     console.error(error);
+    return Promise.reject(error);
   }
-  return companions; // This might not reflect the updated companions list due to asynchronous operation
+};
+
+const checkSentRequests = (sentRequests, companions) => {
+  // check if the companions list includes the already sent requests
+  // return the companions list without the already sent requests
+  // if no sent requests, return the companions list
+  if (sentRequests === null || sentRequests === undefined) {
+    return companions;
+  }
+  if (companions === null || companions === undefined) {
+    return companions;
+  }
+  if (sentRequests.length === 0) {
+    return companions;
+  }
+  if (companions.length === 0) {
+    return companions;
+  }
+  // iterate through the sent requests
+  for (const i in sentRequests) {
+    console.log(sentRequests[i]);
+    // filter the companions list based on the date and start time and end time
+    // if the netId, date, start time and end time are the same, remove the companion from the list
+    // Very initial implementation, need to be improved
+    companions = companions.filter(
+      (companion) =>
+        companion.netid !== sentRequests[i].netid ||
+        companion.availability[sentRequests[i].date].startTime !==
+          sentRequests[i].time.startTime ||
+        companion.availability[sentRequests[i].date].endTime !==
+          sentRequests[i].time.endTime
+    );
+  }
+  return companions;
 };
 
 const findCommonTime = async (userid, companion, dayOfWeek) => {
   // find the common time between the user and the companion
   // return the common time
   // handle the case of every undefined and null
-  const user = (await get(ref(db, `/users/${userid}`))).val()
-  
+  const user = (await get(ref(db, `/users/${userid}`))).val();
+
   const userAvailability = user.availability;
   const companionAvailability = companion.availability;
   const userStart = userAvailability[dayOfWeek].startTime;
@@ -146,11 +148,11 @@ const findCommonTime = async (userid, companion, dayOfWeek) => {
   const companionStart = companionAvailability[dayOfWeek].startTime;
   const companionEnd = companionAvailability[dayOfWeek].endTime;
   // handle the case of every undefined and null
-  console.log("testing here")
-  console.log(userStart)
-  console.log(userEnd)
-  console.log(companionStart)
-  console.log(companionEnd)
+  console.log("testing here");
+  console.log(userStart);
+  console.log(userEnd);
+  console.log(companionStart);
+  console.log(companionEnd);
   if (
     userStart === null ||
     userStart === undefined ||
@@ -179,35 +181,37 @@ const findCommonTime = async (userid, companion, dayOfWeek) => {
       endTime: companionEnd,
     };
   } else {
-    console.log(Math.max(new Date(`2020-01-01 ${userStart}`), new Date(`2020-01-01 ${companionStart}`)))
-    console.log(typeof(userStart))
-    console.log(typeof(companionStart))
-    const start1 = new Date(`2020-01-01 ${userStart}`)
-    const start2 = new Date(`2020-01-01 ${companionStart}`)
-    const end1 = new Date(`2020-01-01 ${userEnd}`)
-    const end2 = new Date(`2020-01-01 ${companionEnd}`)
+    console.log(
+      Math.max(
+        new Date(`2020-01-01 ${userStart}`),
+        new Date(`2020-01-01 ${companionStart}`)
+      )
+    );
+    console.log(typeof userStart);
+    console.log(typeof companionStart);
+    const start1 = new Date(`2020-01-01 ${userStart}`);
+    const start2 = new Date(`2020-01-01 ${companionStart}`);
+    const end1 = new Date(`2020-01-01 ${userEnd}`);
+    const end2 = new Date(`2020-01-01 ${companionEnd}`);
     let startTimeR = companionStart;
     let endTimeR = userEnd;
-    
+
     if (start1 < start2) {
       startTimeR = companionStart;
-
-    } else{
+    } else {
       startTimeR = userStart;
     }
 
     if (end1 < end2) {
-       endTimeR = userEnd;
-    } else{
-       endTimeR = companionEnd;
+      endTimeR = userEnd;
+    } else {
+      endTimeR = companionEnd;
     }
-      
+
     return {
       startTime: startTimeR,
       endTime: endTimeR,
-
-    }
-    
+    };
   }
 };
 
@@ -215,7 +219,7 @@ const findCommonLocation = async (userid, companion) => {
   // find the common location between the user and the companion
   // return the common location
   // if no common location, return one of the companion's favorite locations
-  const user = (await get(ref(db, `/users/${userid}`))).val()
+  const user = (await get(ref(db, `/users/${userid}`))).val();
 
   const userLocations = user.fav_locations;
   const companionLocations = companion.fav_locations;
@@ -243,30 +247,29 @@ const CompanionsList = ({ companions, date }) => {
   const { user } = useParams();
   const [filteredCompanions, setFilteredCompanions] = useState([]);
 
-  useEffect(() => {
-    const filterCompanions = async () => {
-      try {
-        const snapshot = await get(ref(db, `/users`));
-        if (snapshot.exists()) {
-          let currUserObj = snapshot.val()[user];
-          if (currUserObj && currUserObj.sent_requests) {
-            const sentRequests = currUserObj.sent_requests;
-            const updatedCompanions = companions
-            // .filter(
-            //   // (companion) => !sentRequests.includes(companion.netid)
-            // );
-            setFilteredCompanions(updatedCompanions);
-          } else {
-            setFilteredCompanions(companions);
-          }
+  const updateCompanionsList = async () => {
+    try {
+      const snapshot = await get(ref(db, `/users`));
+      if (snapshot.exists()) {
+        let currUserObj = snapshot.val()[user];
+        if (currUserObj && currUserObj.sent_requests) {
+          const updatedCompanions = checkSentRequests(
+            currUserObj.sent_requests,
+            companions
+          );
+          setFilteredCompanions(updatedCompanions);
+        } else {
+          setFilteredCompanions(companions);
         }
-      } catch (error) {
-        console.error(error);
       }
-    };
-
-    filterCompanions();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    updateCompanionsList();
   }, [companions, user]);
+
   return (
     <div>
       <div className="companionsList">
@@ -281,13 +284,14 @@ const CompanionsList = ({ companions, date }) => {
                 key={i}
                 userObject={e}
                 onAccept={async () => {
-                  sendInvitation(
+                  await sendInvitation(
                     user,
                     e,
                     dayOfWeek,
                     await findCommonTime(user, e, dayOfWeek),
                     await findCommonLocation(user, e)
                   );
+                  await updateCompanionsList(); // Update the companions list after sending an invitation
                 }}
                 onReject={null}
                 dayOfWeek={dayOfWeek}
