@@ -13,6 +13,7 @@ import {
   set,
   onValue,
   push,
+  update
 } from "firebase/database";
 import { Link, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
@@ -43,54 +44,97 @@ function ComfirmedPage() {
 
         if (userobj) {
           setUserObject(userobj);
-
+          //sent_requests: {uniqueid: {netid: , date:, time: , location: }, uniqueid2:{},......}
+          // requestId: {requestId, netid, time, date, location}
           let sentlist = [];
           if (userobj.sent_requests) {
-            sentlist = userobj.sent_requests.map((eid) => {
-              return snapshot.val()[eid];
-            });
-            sentlist = sentlist.filter((e) => e);
+            for (const reqid in userobj.sent_requests){
+
+              if(!userobj.sent_requests[reqid]){continue}
+              let eid = userobj.sent_requests[reqid].netid
+
+              if(!eid){continue}
+              if(!snapshot.val()[eid]){continue}
+              
+
+              // requestId: {requestId, netid, time, date, location}
+              let tempobj = {
+                userData: snapshot.val()[eid],
+                requestData: userobj.sent_requests[reqid]
+              }
+              sentlist.push(tempobj)
+            }
           }
 
           console.log(sentlist);
-
-          // snapshot.val().filter((e) => {
-          //   return userobj.sent_requests.includes(e.netid);
-          // });
-          // for testing only
-
           setSent(sentlist);
 
           let receivedlist = [];
+          // if (userobj.received_requests) {
+          //   receivedlist = userobj.received_requests.map((eid) => {
+          //     return snapshot.val()[eid];
+          //   });
+          //   receivedlist = receivedlist.filter((e) => e);
+          // }
+
+
           if (userobj.received_requests) {
-            receivedlist = userobj.received_requests.map((eid) => {
-              return snapshot.val()[eid];
-            });
-            receivedlist = receivedlist.filter((e) => e);
+            for (const reqid in userobj.received_requests){
+
+              if(!userobj.received_requests[reqid]){continue}
+              let eid = userobj.received_requests[reqid].netid
+
+              if(!eid){continue}
+              if(!snapshot.val()[eid]){continue}
+              
+
+              
+              let tempobj = {
+                userData: snapshot.val()[eid],
+                requestData: userobj.received_requests[reqid]
+              }
+              receivedlist.push(tempobj)
+            }
           }
+
 
           console.log(receivedlist);
 
-          // snapshot.val().filter((e) => {
-          //   return userobj.received_requests.includes(e.netid);
-          // });
-          // for testing only
+
 
           setReceived(receivedlist);
 
           let confirmedlist = [];
+          // if (userobj.confirmed_requests) {
+          //   confirmedlist = userobj.confirmed_requests.map((eid) => {
+          //     return snapshot.val()[eid];
+          //   });
+          //   confirmedlist = confirmedlist.filter((e) => e);
+          // }
+
           if (userobj.confirmed_requests) {
-            confirmedlist = userobj.confirmed_requests.map((eid) => {
-              return snapshot.val()[eid];
-            });
-            confirmedlist = confirmedlist.filter((e) => e);
+            for (const reqid in userobj.confirmed_requests){
+
+              if(!userobj.confirmed_requests[reqid]){continue}
+              let eid = userobj.confirmed_requests[reqid].netid
+
+              if(!eid){continue}
+              if(!snapshot.val()[eid]){continue}
+              
+
+              
+              let tempobj = {
+                userData: snapshot.val()[eid],
+                requestData: userobj.confirmed_requests[reqid]
+              }
+              confirmedlist.push(tempobj)
+            }
           }
+
+
+
           console.log(confirmedlist);
 
-          // snapshot.val().filter((e) => {
-          //   return userobj.confirmed_requests.includes(e.netid);
-          // });
-          // for testing only
 
           setConfirmed(confirmedlist);
         }
@@ -107,9 +151,10 @@ function ComfirmedPage() {
     // set(push(ref(db, `/users/2/received_requests`)), 'Jones1');
   }, []);
 
+  //sent_requests: {uniqueid: {netid: , date:, time: , location: , requestid: }, uniqueid2:{},......}
   // current user: remove from current user - sent
   // effected user: remove from target user - received
-  const sentReject = async (currnetid, effectednetid) => {
+  const sentReject = async (currnetid, effectednetid, requestid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
         if (snapshot.exists()) {
@@ -121,13 +166,13 @@ function ComfirmedPage() {
 
           let currUserObj = snapshot.val()[currnetid];
           if (currUserObj) {
-            let updatedCurrUserSentList = currUserObj.sent_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserSentList);
+            // let updatedCurrUserSentList = currUserObj.sent_requests.filter(
+            //   (e) => e != effectednetid
+            // );
+            // console.log(updatedCurrUserSentList);
             set(
-              ref(db, `/users/${currnetid}/sent_requests`),
-              updatedCurrUserSentList
+              ref(db, `/users/${currnetid}/sent_requests/${requestid}`),
+              null
             );
           }
 
@@ -136,12 +181,12 @@ function ComfirmedPage() {
           let effUserObj = snapshot.val()[effectednetid];
 
           if (effUserObj) {
-            let updatedEffUserReceivedList =
-              effUserObj.received_requests.filter((e) => e != currnetid);
-            console.log(updatedEffUserReceivedList);
+            // let updatedEffUserReceivedList =
+            //   effUserObj.received_requests.filter((e) => e != currnetid);
+            // console.log(updatedEffUserReceivedList);
             set(
-              ref(db, `/users/${effectednetid}/received_requests`),
-              updatedEffUserReceivedList
+              ref(db, `/users/${effectednetid}/received_requests/${requestid}`),
+              null
             );
           }
         } else {
@@ -153,9 +198,16 @@ function ComfirmedPage() {
       });
   };
 
+  //sent_requests: {uniqueid: {netid: , date:, time: , location: , requestid: }, uniqueid2:{},......}
   // current user: move from received to confirmed
   // effected user: move from sent to confirmed
-  const receivedAccept = async (currnetid, effectednetid) => {
+
+  // {
+  //   userData: snapshot.val()[eid],
+  //   requestData: userobj.sent_requests[reqid]
+  // }
+
+  const receivedAccept = async (currnetid, effectednetid, requestid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
         if (snapshot.exists()) {
@@ -163,34 +215,51 @@ function ComfirmedPage() {
 
           let currUserObj = snapshot.val()[currnetid];
           if (currUserObj) {
-            currUserObj.received_requests =
-              currUserObj.received_requests.filter((e) => e != effectednetid);
+            // currUserObj.received_requests = currUserObj.received_requests.filter((e) => e != effectednetid);
+
+            
 
             if (currUserObj.confirmed_requests) {
-              currUserObj.confirmed_requests.push(effectednetid);
+              currUserObj.confirmed_requests[requestid] = {...currUserObj.received_requests[requestid]}
             } else {
-              currUserObj.confirmed_requests = [effectednetid];
+              currUserObj['confirmed_requests'] = {}
+              currUserObj.confirmed_requests[requestid] = {...currUserObj.received_requests[requestid]}
             }
-
+            delete currUserObj.received_requests[requestid]
+            console.log('receivedAccept curr')
             console.log(currUserObj);
-            set(ref(db, `/users/${currnetid}`), currUserObj);
+            update(ref(db, `/users/${currnetid}`), currUserObj);
           }
 
           // effected user: move from sent to confirmed
 
           let effUserObj = snapshot.val()[effectednetid];
           if (effUserObj) {
-            effUserObj.sent_requests = effUserObj.sent_requests.filter(
-              (e) => e != currnetid
-            );
+            // effUserObj.sent_requests = effUserObj.sent_requests.filter(
+            //   (e) => e != currnetid
+            // );
+            console.log('before if')
+            console.log(requestid)
+            console.log(effectednetid)
+           // console.log(currUserObj.confirmed_requests[requestid])
+            console.log(effUserObj.sent_requests[requestid])
+
+
             if (effUserObj.confirmed_requests) {
-              effUserObj.confirmed_requests.push(currnetid);
+              console.log('if 1')
+              effUserObj.confirmed_requests[requestid] = {...effUserObj.sent_requests[requestid]}
+
             } else {
-              effUserObj.confirmed_requests = [currnetid];
+              console.log('if 2')
+              effUserObj['confirmed_requests'] = {}
+              effUserObj.confirmed_requests[requestid] = {...effUserObj.sent_requests[requestid]}
             }
 
+            delete effUserObj.sent_requests[requestid]
+            console.log('receivedAccept eff')
             console.log(effUserObj);
-            set(ref(db, `/users/${effectednetid}`), effUserObj);
+            console.log('____________receivedAccept eff______________')
+            update(ref(db, `/users/${effectednetid}`), effUserObj);
           }
         } else {
           console.log("No data available");
@@ -203,7 +272,7 @@ function ComfirmedPage() {
 
   // current user: remove from received
   // effected user: remove from sent
-  const receivedReject = async (currnetid, effectednetid) => {
+  const receivedReject = async (currnetid, effectednetid, requestid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
         if (snapshot.exists()) {
@@ -211,13 +280,13 @@ function ComfirmedPage() {
 
           let currUserObj = snapshot.val()[currnetid];
           if (currUserObj) {
-            let updatedCurrUserList = currUserObj.received_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserList);
+            // let updatedCurrUserList = currUserObj.received_requests.filter(
+            //   (e) => e != effectednetid
+            // );
+            // console.log(updatedCurrUserList);
             set(
-              ref(db, `/users/${currnetid}/received_requests`),
-              updatedCurrUserList
+              ref(db, `/users/${currnetid}/received_requests/${requestid}`),
+              null
             );
           }
 
@@ -226,13 +295,13 @@ function ComfirmedPage() {
           let effUserObj = snapshot.val()[effectednetid];
 
           if (effUserObj) {
-            let updatedEffUserList = effUserObj.sent_requests.filter(
-              (e) => e != currnetid
-            );
-            console.log(updatedEffUserList);
+            // let updatedEffUserList = effUserObj.sent_requests.filter(
+            //   (e) => e != currnetid
+            // );
+            // console.log(updatedEffUserList);
             set(
-              ref(db, `/users/${effectednetid}/sent_requests`),
-              updatedEffUserList
+              ref(db, `/users/${effectednetid}/sent_requests/${requestid}`),
+              null
             );
           }
         } else {
@@ -246,7 +315,7 @@ function ComfirmedPage() {
 
   // current user: remove from confirmed
   // effected user: remove from confirmed
-  const confirmedReject = async (currnetid, effectednetid) => {
+  const confirmedReject = async (currnetid, effectednetid, requestid) => {
     get(ref(db, `/users`))
       .then((snapshot) => {
         if (snapshot.exists()) {
@@ -254,13 +323,13 @@ function ComfirmedPage() {
 
           let currUserObj = snapshot.val()[currnetid];
           if (currUserObj) {
-            let updatedCurrUserList = currUserObj.confirmed_requests.filter(
-              (e) => e != effectednetid
-            );
-            console.log(updatedCurrUserList);
+            // let updatedCurrUserList = currUserObj.confirmed_requests.filter(
+            //   (e) => e != effectednetid
+            // );
+            // console.log(updatedCurrUserList);
             set(
-              ref(db, `/users/${currnetid}/confirmed_requests`),
-              updatedCurrUserList
+              ref(db, `/users/${currnetid}/confirmed_requests/${requestid}`),
+              null
             );
           }
 
@@ -269,13 +338,13 @@ function ComfirmedPage() {
           let effUserObj = snapshot.val()[effectednetid];
 
           if (effUserObj) {
-            let updatedEffUserList = effUserObj.confirmed_requests.filter(
-              (e) => e != currnetid
-            );
-            console.log(updatedEffUserList);
+            // let updatedEffUserList = effUserObj.confirmed_requests.filter(
+            //   (e) => e != currnetid
+            // );
+            // console.log(updatedEffUserList);
             set(
-              ref(db, `/users/${effectednetid}/confirmed_requests`),
-              updatedEffUserList
+              ref(db, `/users/${effectednetid}/confirmed_requests/${requestid}`),
+              null
             );
           }
         } else {
@@ -287,6 +356,13 @@ function ComfirmedPage() {
       });
   };
 
+
+                // requestId: {requestId, netid, time, date, location}
+                // let tempobj = {
+                //   userData: snapshot.val()[eid],
+                //   requestData: userobj.sent_requests[reqid]
+                // }
+
   return (
     <Tabs defaultActiveKey="Sent" id="fill-tab-example" className="mb-3" fill>
       <Tab eventKey="Sent" title="Sent">
@@ -295,9 +371,10 @@ function ComfirmedPage() {
             return (
               <UserCardSent
                 key={i}
-                userObject={e}
+                userObject={e.userData}
+                requestObject={e.requestData}
                 onAccept={null}
-                onReject={() => sentReject(user, e.netid)}
+                onReject={() => sentReject(user, e.userData.netid, e.requestData.requestId)}
               />
             );
           })}
@@ -309,9 +386,10 @@ function ComfirmedPage() {
             return (
               <UserCardSent
                 key={i}
-                userObject={e}
-                onAccept={() => receivedAccept(user, e.netid)}
-                onReject={() => receivedReject(user, e.netid)}
+                userObject={e.userData}
+                requestObject={e.requestData}
+                onAccept={() => receivedAccept(user, e.userData.netid, e.requestData.requestId)}
+                onReject={() => receivedReject(user, e.userData.netid, e.requestData.requestId)}
               />
             );
           })}
@@ -324,9 +402,10 @@ function ComfirmedPage() {
             return (
               <UserCardSent
                 key={i}
-                userObject={e}
+                userObject={e.userData}
+                requestObject={e.requestData}
                 onAccept={null}
-                onReject={() => confirmedReject(user, e.netid)}
+                onReject={() => confirmedReject(user, e.userData.netid, e.requestData.requestId)}
               />
             );
           })}

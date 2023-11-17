@@ -19,7 +19,7 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow}>
           <Card.Title>
-            {userObject.last_name} {userObject.first_name} ({userObject.netid})
+            {userObject.last_name ? userObject.last_name : 'last name'} {userObject.first_name ? userObject.first_name : 'first name'} ({userObject.netid ? userObject.netid : 'netid'})
           </Card.Title>
           <Card.Text>
             {userObject.availability["Friday"].startTime}-
@@ -108,8 +108,8 @@ export const UserCardSearch = ({
         </Card.Body>
         <Card.Body>
           <Popconfirm
-            title="Invitation"
-            description="Are you sure to invite?"
+            title="Accept"
+            description="Are you sure to accept?"
             onConfirm={onAccept}
             // onCancel={console.log('cancel')}
             okText="Yes"
