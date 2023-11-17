@@ -23,6 +23,7 @@
     "react-scripts": "5.0.1",
     "react-tabs": "^6.0.2",
     "testing-library": "0.0.2",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
