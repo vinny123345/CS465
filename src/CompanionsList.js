@@ -130,10 +130,12 @@ const checkSentRequests = (user, companions) => {
   return companions; // This might not reflect the updated companions list due to asynchronous operation
 };
 
-const findCommonTime = (user, companion, dayOfWeek) => {
+const findCommonTime = async (userid, companion, dayOfWeek) => {
   // find the common time between the user and the companion
   // return the common time
   // handle the case of every undefined and null
+  const user = (await get(ref(db, `/users/${userid}`))).val()
+  
   const userAvailability = user.availability;
   const companionAvailability = companion.availability;
   const userStart = userAvailability[dayOfWeek].startTime;
@@ -176,10 +178,12 @@ const findCommonTime = (user, companion, dayOfWeek) => {
   }
 };
 
-const findCommonLocation = (user, companion) => {
+const findCommonLocation = async (userid, companion) => {
   // find the common location between the user and the companion
   // return the common location
   // if no common location, return one of the companion's favorite locations
+  const user = (await get(ref(db, `/users/${userid}`))).val()
+
   const userLocations = user.fav_locations;
   const companionLocations = companion.fav_locations;
   // handle the case of every undefined and null
