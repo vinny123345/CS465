@@ -108,9 +108,11 @@ button:hover {
 #avail-modal,
 #loc-modal {
     top: 40%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #daybutton {
     display: flex;
     flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
 }

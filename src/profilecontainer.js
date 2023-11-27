@@ -320,8 +320,10 @@ export const Profilecontainer = () => {
                 <p>Select a day to edit availability:</p>
                 {daysOfWeek.map((day, index) => (
                   <Button id="daybutton" key={index} onClick={() => handleDayButtonClick(day)}>
-                    {day}
-                  </Button>
+                    {day} - {userData.availability && userData.availability[day]
+                      ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
+                      : "No Availability Selected"}
+                </Button>
                 ))}
               </>
             ) : (
