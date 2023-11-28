@@ -30,6 +30,7 @@ export const Profilecontainer = () => {
   const [fav_locations, setFav_locations] = useState([]);
   const [activeTab, setActiveTab] = useState('restaurants');
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -104,6 +105,7 @@ export const Profilecontainer = () => {
   }
 
   const handleAvailabilityButtonClick = async () => {
+
     setShowAvailabilityModal(true);
     setInitialAvailabilityView(true);
     // Set selected day, start time, and end time to current values from user data
@@ -133,6 +135,10 @@ export const Profilecontainer = () => {
         };
 
         await updateUser(user, updatedUserData);
+        
+        // Fetch updated user data immediately after saving
+        const refreshedUserData = await getUser(user);
+        setUserData(refreshedUserData);
 
         console.log(`Saved availability for ${selectedDay}: ${startTime} - ${endTime}`);
       }
@@ -300,14 +306,47 @@ export const Profilecontainer = () => {
         </div>
         <div className="bottom-line" />
       </div>
-      <div className="preferences-buttons">
-        <button id="avail-button" onClick={handleAvailabilityButtonClick}>
-          Edit Availability
-        </button>
+        
+  <div className="preferences-container">
+  <div className="availability-section">
+    <div className="availability-info">
+      <h2>Availability</h2>
+      <ul className="availability-list">
+        {daysOfWeek.map((day) => (
+           <li key={day}>
+           <strong>{day}:</strong>{" "}
+        <span className="availability-time">
+          {userData.availability && userData.availability[day]
+            ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
+            : "No Availability Selected"}
+        </span>
+      </li>
+    ))}
+  </ul>
+</div>
 
-        <button id="location-button" onClick={handleLocationButtonClick}>
-          Edit Locations
-        </button>
+    <button id="avail-button" onClick={handleAvailabilityButtonClick}>
+      Edit Availability
+    </button>
+  </div>
+
+  <div className="locations-section">
+    <div className="locations-info">
+      <h2>Favorite Locations</h2>
+      {fav_locations.length > 0 ? (
+        <ul>
+          {fav_locations.map((location, index) => (
+            <li key={index}>{location}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No favorite locations set.</p>
+      )}
+    </div>
+    <button id="location-button" onClick={handleLocationButtonClick}>
+      Edit Locations
+    </button>
+  </div>
 
         {/* Availability Modal */}
         <Modal id="avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>

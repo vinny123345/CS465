@@ -116,3 +116,25 @@ button:hover {
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
 }
+
+
+.preferences-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .preferences-buttons {
+    width: 30%;
+  }
+  
+  .preferences-info {
+    width: 60%;
+  }
+
+  /* .availability-time {
+    font-size: 12px; 
+  }
+  */
+
+
+  
