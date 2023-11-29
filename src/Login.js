@@ -36,6 +36,7 @@ export const LoginModule = () => {
                 onChange={e => setPassword(e.target.value)} />
             <button onClick={logIn}>Log In</button>
             <Link to="/register">Don't have an account? Create one here</Link>
+            <Link to="/forgot">Reset Password</Link>
         </div>
     );
 }
