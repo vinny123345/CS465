@@ -16,6 +16,7 @@ import ComfirmedPage from "./comfirmedpage";
 import { getUser } from "./DBUtils";
 import { LoginModule } from './Login';
 import { RegisterModule } from './Register';
+import { PasswordReset } from './ForgotPasword'; 
 import { LogoutModule } from './Logout'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faSearch, faCheck } from '@fortawesome/free-solid-svg-icons';
@@ -89,7 +90,8 @@ root.render(
     <Routes>
       <Route path= "" element={<RegisterModule />} /> 
       <Route path= "/login" element={<LoginModule />} /> 
-      <Route path= "/register" element={<RegisterModule />} /> 
+      <Route path= "/register" element={<RegisterModule />} />
+      <Route path= "/forgot" element={<PasswordReset />} />  
       <Route path= "/logout" element={<LogoutModule />} /> 
       <Route path="/" element={<App />}>
         <Route path=":user" element={<Profilecontainer />} />

@@ -377,7 +377,7 @@ export const Profilecontainer = () => {
                   >
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
-                    <option value="Other">Non-Binary</option>
+                    <option value="Non-Binary">Non-Binary</option>
                   </select>
                   {error.gender && (
                     <p className="error-message">{error.gender}</p>
@@ -430,7 +430,7 @@ export const Profilecontainer = () => {
                 </p>
                 <p>
                   <strong>Major:</strong>{" "}
-                  {userData.major !== "major" ? userData.grade : "None"}
+                  {userData.major !== "major" ? userData.major : "None"}
                 </p>
                 <button onClick={handleEditClick}>Edit</button>
               </>

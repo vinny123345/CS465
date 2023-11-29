@@ -32,7 +32,7 @@ const sendInvitation = async (
       // Generate a unique key for the new request
       const newRequestId = generateUniqueKey();
 
-      // Create an object with the new request using the unique key
+      // // Create an object with the new request using the unique key
       const newRequest = {
         requestId: newRequestId,
         netid: effectednetid,
@@ -40,7 +40,10 @@ const sendInvitation = async (
         date: dayOfWeek,
         location: commonLocation,
         // Other properties of the request...
-      };
+      }
+      console.log(newRequest)
+      
+
       // TODO: get the current sent_reuquests
       // TODO: push the newRquest object into the requests
 
@@ -131,6 +134,7 @@ const findCommonTime = async (userid, companion, dayOfWeek) => {
     } else {
       return userAvailability;
     }
+    
   } catch (error) {
     console.error("Error in findCommonTime:", error);
     return null;
@@ -144,25 +148,26 @@ const findCommonLocation = async (userid, companion) => {
   const user = (await get(ref(db, `/users/${userid}`))).val();
 
   const userLocations = user.fav_locations;
-  const companionLocations = companion.fav_locations;
-  // handle the case of every undefined and null
+  // const companionLocations = companion.fav_locations;
+  // // handle the case of every undefined and null
   if (userLocations === null || userLocations === undefined) {
     return "User has no favorite locations";
   }
-  if (companionLocations === null || companionLocations === undefined) {
-    return userLocations[0];
-  }
-  if (userLocations.length === 0) {
-    return "User has no favorite locations";
-  }
-  if (companionLocations.length === 0) {
-    return userLocations[0];
-  }
-  for (let i = 0; i < userLocations.length; i++) {
-    if (companionLocations.includes(userLocations[i])) {
-      return userLocations[i];
-    }
-  }
+  // if (companionLocations === null || companionLocations === undefined) {
+  //   return userLocations[0];
+  // }
+  // if (userLocations.length === 0) {
+  //   return "User has no favorite locations";
+  // }
+  // if (companionLocations.length === 0) {
+  //   return userLocations[0];
+  // }
+  // for (let i = 0; i < userLocations.length; i++) {
+  //   if (companionLocations.includes(userLocations[i])) {
+  //     return userLocations[i];
+  //   }
+  // }
+  return userLocations;
 };
 
 const CompanionsList = ({ companions, date }) => {

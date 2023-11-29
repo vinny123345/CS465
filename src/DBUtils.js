@@ -11,15 +11,27 @@ import {
   update,
 } from "firebase/database";
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
+//   authDomain: "ieatcs465.firebaseapp.com",
+//   databaseURL: "https://ieatcs465-default-rtdb.firebaseio.com",
+//   projectId: "ieatcs465",
+//   storageBucket: "ieatcs465.appspot.com",
+//   messagingSenderId: "86450940860",
+//   appId: "1:86450940860:web:8b798a96c3292a626d19b9",
+//   measurementId: "G-WC6BY9CG6S",
+// };
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyB6OMDiGIuzU0o-is8CLn_yAqIdiORk-vc",
-  authDomain: "ieatcs465.firebaseapp.com",
-  databaseURL: "https://ieatcs465-default-rtdb.firebaseio.com",
-  projectId: "ieatcs465",
-  storageBucket: "ieatcs465.appspot.com",
-  messagingSenderId: "86450940860",
-  appId: "1:86450940860:web:8b798a96c3292a626d19b9",
-  measurementId: "G-WC6BY9CG6S",
+  apiKey: "AIzaSyBNixQllEtZUc-n-kn-W5jx3v9eJXm1t8s",
+  authDomain: "ieat-77e14.firebaseapp.com",
+  databaseURL: "https://ieat-77e14-default-rtdb.firebaseio.com",
+  projectId: "ieat-77e14",
+  storageBucket: "ieat-77e14.appspot.com",
+  messagingSenderId: "1090096425975",
+  appId: "1:1090096425975:web:490c1578c0e2767935dcf2",
+  measurementId: "G-PJRJH62M3Q"
 };
 
 const app = initializeApp(firebaseConfig);
