@@ -34,6 +34,9 @@ const firebaseConfig = {
   measurementId: "G-PJRJH62M3Q"
 };
 
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
 export { db };
 
 export async function getUser(netid) {
