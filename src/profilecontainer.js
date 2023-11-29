@@ -582,7 +582,7 @@ export const Profilecontainer = () => {
             >
               {initialAvailabilityView ? "Cancel" : "Back"}
             </Button>
-            <Button variant="primary" onClick={handleSaveAvailability}>
+            <Button id= "saveavail" variant="primary" onClick={handleSaveAvailability}>
               Save
             </Button>
           </Modal.Footer>
@@ -614,7 +614,7 @@ export const Profilecontainer = () => {
                 <Tab.Pane eventKey="restaurants">
                   <ListGroup>
                     {restaurantLocations.map((location, index) => (
-                      <ListGroup.Item key={index} action>
+                      <ListGroup.Item key={index} action onClick={() => handleStarClick(location)}>
                         <FontAwesomeIcon
                           icon={
                             fav_locations.includes(location)
@@ -622,7 +622,6 @@ export const Profilecontainer = () => {
                               : regularStar
                           }
                           className="star-icon"
-                          onClick={() => handleStarClick(location)}
                         />
                         {location}
                       </ListGroup.Item>
@@ -632,7 +631,7 @@ export const Profilecontainer = () => {
                 <Tab.Pane eventKey="cafeterias">
                   <ListGroup>
                     {cafeteriaLocations.map((location, index) => (
-                      <ListGroup.Item key={index} action>
+                      <ListGroup.Item key={index} action onClick={() => handleStarClick(location)}>
                         <FontAwesomeIcon
                           icon={
                             fav_locations.includes(location)
@@ -640,7 +639,6 @@ export const Profilecontainer = () => {
                               : regularStar
                           }
                           className="star-icon"
-                          onClick={() => handleStarClick(location)}
                         />
                         {location}
                       </ListGroup.Item>
@@ -654,7 +652,7 @@ export const Profilecontainer = () => {
             <Button variant="secondary" onClick={handleCloseLocationModal}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleRemoveLocation}>
+            <Button id= "saveloc" variant="primary" onClick={handleRemoveLocation}>
               Save
             </Button>
           </Modal.Footer>

@@ -26,6 +26,7 @@
 
 .logoutlink .btn-primary {
   background-color: rgb(30, 56, 119);
+  border-color: rgb(30, 56, 119);
   /* Accent color for logout button */
 }
 
@@ -62,6 +63,7 @@
 .navtab .btn {
   padding: 10px;
   color: rgb(30, 56, 119);
+  border-color: rgb(30, 56, 119);
   text-decoration: none;
   background-color: transparent;
   border: none;

@@ -81,6 +81,7 @@ input[type="file"] {
 button {
     padding: 0.5rem 1rem;
     background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
     border: none;
     border-radius: 0.25rem;
     color: white;
@@ -93,11 +94,13 @@ button {
 
 button:hover {
     background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
 }
 
 .edit-button {
     display: block;
     background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
 }
 
 .bottom-line {
@@ -117,8 +120,33 @@ button:hover {
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
+    background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
 }
 
+#saveavail {
+    background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
+}
+
+#avail-modal .list-group-item-action:focus,
+#avail-modal .list-group-item-action:active {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+#loc-modal .list-group-item-action:focus,
+#loc-modal .list-group-item-action:active {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+#saveloc {
+    background-color: rgb(30, 56, 119);
+    border-color: rgb(30, 56, 119);
+}
 .visbutton {
     width: 100%;
     margin-top: 2.5%;
@@ -129,13 +157,13 @@ button:hover {
 }
 
 .visbutton .btn-secondary {
-    background-color: rgb(30, 56, 119) !important;
-    border-color: rgb(30, 56, 119) !important;
-  }
-    
-.visbutton .btn-secondary.active {
     background-color: rgb(29, 88, 167) !important; 
     border-color: rgb(29, 88, 167) !important;
+}
+    
+.visbutton .btn-secondary.active {
+    background-color: rgb(30, 56, 119) !important;
+    border-color: rgb(30, 56, 119) !important;
   }
 
 .preferences-container {

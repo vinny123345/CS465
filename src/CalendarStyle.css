@@ -1,7 +1,7 @@
 .react-calendar__navigation {
-    background-color: #1087ff; /* Replace with your desired color */
+    background-color: rgb(30, 56, 119); /* Replace with your desired color */
   }
-  
+
   /* This targets the buttons (arrows) inside the navigation bar */
   .react-calendar__tile {
     color: black; /* Change the color to black or any other color that is visible against your calendar's background */
