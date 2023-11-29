@@ -22,18 +22,19 @@ export const UserCardSent = ({
   return (
     <>
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
-        <Card.Body onClick={handleShow}>
+        <Card.Body onClick={handleShow} style={{paddingBottom: '0'}}>
           <Card.Title>
             {userObject.last_name ? userObject.last_name : "Last Name"}{" "}
             {userObject.first_name ? userObject.first_name : "First Name"} (
             {userObject.netid ? userObject.netid : "netid"})
           </Card.Title>
           <Card.Text>
+          <p>
             {requestObject.date ? requestObject.date : "Date"}:
             {requestObject.time
               ? requestObject.time.startTime + "-" + requestObject.time.endTime
               : "time"}{" "}
-
+          </p>
           <p>
               Location:{" "}
               {userObject.fav_locations === undefined
@@ -49,7 +50,7 @@ export const UserCardSent = ({
           
           </Card.Text>
         </Card.Body>
-        <Card.Body>
+        <Card.Body style={{paddingTop: '0'}}>
           <Popconfirm
             title="Accept"
             description="Are you sure to accept?"

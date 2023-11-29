@@ -37,9 +37,9 @@ export const Profilecontainer = () => {
   // Validation function
   const validate = () => {
     let newErrors = {};
-    if (userData.first_name === "firstname")
+    if (userData.first_name === "firstname" || userData.first_name === "")
       newErrors.first_name = "First name is required";
-    if (!userData.last_name === "lastname")
+    if (!userData.last_name === "lastname" || userData.last_name === "")
       newErrors.last_name = "Last name is required";
     // if (!userData.grade) newErrors.grade = 'Grade is required';
     if (userData.gender === "gender") newErrors.gender = "Gender is required";
@@ -441,22 +441,22 @@ export const Profilecontainer = () => {
       </div>
 
       <div className="preferences-container">
-        <ButtonGroup className= "visbutton">
-            <Button
-              variant="secondary"
-              onClick={() => handleToggle("availability")}
-              active={viewMode === "availability"}
-            >
-              Availability
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => handleToggle("locations")}
-              active={viewMode === "locations"}
-            >
-              Locations
-            </Button>
-          </ButtonGroup>
+        <ButtonGroup className="visbutton">
+          <Button
+            variant="secondary"
+            onClick={() => handleToggle("availability")}
+            active={viewMode === "availability"}
+          >
+            Availability
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleToggle("locations")}
+            active={viewMode === "locations"}
+          >
+            Locations
+          </Button>
+        </ButtonGroup>
         {viewMode === "availability" && (
           <div className="availability-section">
             <div className="availability-info">
@@ -480,7 +480,7 @@ export const Profilecontainer = () => {
             </button>
           </div>
         )}
-          {viewMode === "locations" && (
+        {viewMode === "locations" && (
           <div className="locations-section">
             <div className="locations-info">
               <h2>Favorite Locations</h2>
