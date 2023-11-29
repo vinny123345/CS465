@@ -30,6 +30,20 @@ export const Profilecontainer = () => {
   const [fav_locations, setFav_locations] = useState([]);
   const [activeTab, setActiveTab] = useState('restaurants');
 
+  const [error, setError] = useState({});
+
+  // Validation function
+  const validate = () => {
+    let newErrors = {};
+    if (userData.first_name === 'firstname') newErrors.first_name = 'First name is required';
+    if (!userData.last_name === 'lastname') newErrors.last_name = 'Last name is required';
+    // if (!userData.grade) newErrors.grade = 'Grade is required';
+    if (userData.gender === 'gender') newErrors.gender = 'Gender is required';
+    setError(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +91,11 @@ export const Profilecontainer = () => {
   };
 
   const handleSaveClick = async () => {
+    if (!validate()) {
+      // If validation fails, stop the function
+      return
+    }
+
     try {
       await updateUser(user, userData);
       setIsEditing(false);
@@ -135,7 +154,7 @@ export const Profilecontainer = () => {
         };
 
         await updateUser(user, updatedUserData);
-        
+
         // Fetch updated user data immediately after saving
         const refreshedUserData = await getUser(user);
         setUserData(refreshedUserData);
@@ -248,40 +267,78 @@ export const Profilecontainer = () => {
             <h1>Profile</h1>
             {isEditing ? (
               <>
-                <input
-                  type="text"
-                  name="first_name"
-                  className="form-control"
-                  value={userData.first_name}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="last_name"
-                  className="form-control"
-                  value={userData.last_name}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="gender"
-                  value={userData.gender}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
+                <div>
+                  <label>First Name <span style={{ color: 'red' }}>*</span></label>
+                  <input
+                    type="text"
+                    name="first_name"
+                    className="form-control"
+                    placeholder="First Name"
+                    // value={userData.first_name}
+                    value={userData.first_name !== 'firstname' ? userData.first_name : ''}
+                    onChange={handleChange}
+                  />
+                  {error.first_name && <p className="error-message">{error.first_name}</p>}
+                </div>
+
+                <div>
+                  <label>Last Name <span style={{ color: 'red' }}>*</span></label>
+                  <input
+                    type="text"
+                    name="last_name"
+                    className="form-control"
+                    placeholder="Last Name"
+                    value={userData.last_name !== 'lastname' ? userData.last_name : ''}
+                    onChange={handleChange}
+                  />
+                  {error.last_name && <p className="error-message">{error.last_name}</p>}
+                </div>
+                <div>
+                  <label>Gender <span style={{ color: 'red' }}>*</span></label>
+                  <select
+                    name="gender"
+                    className="form-control"
+                    value={userData.gender}
+                    onChange={handleChange}
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Non-Binary</option>
+                  </select>
+                  {error.gender && <p className="error-message">{error.gender}</p>}
+
+                </div>
+
+
+                <label>Grade</label>
+                <select
                   name="grade"
                   className="form-control"
                   value={userData.grade}
                   onChange={handleChange}
-                />
-                <input
-                  type="text"
+                >
+                  <option value="">Select Grade</option>
+                  <option value="Freshman">Freshman</option>
+                  <option value="Sophomore">Sophomore</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Senior">Senior</option>
+                  <option value="Senior">Graduate</option>
+                </select>
+                <label>Major </label>
+                <select
                   name="major"
                   className="form-control"
                   value={userData.major}
                   onChange={handleChange}
-                />
+                >
+                  <option value="">Select Major</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Biology">Biology</option>
+                  <option value="Business">Business</option>
+                  <option value="Art">Art</option>
+                </select>
+
                 <button onClick={handleSaveClick}>Save</button>
               </>
             ) : (
@@ -294,10 +351,10 @@ export const Profilecontainer = () => {
                   <strong>Gender:</strong> {userData.gender}
                 </p>
                 <p>
-                  <strong>Grade:</strong> {userData.grade}
+                  <strong>Grade:</strong> {userData.grade !== 'grade' ? userData.grade : 'None'}
                 </p>
                 <p>
-                  <strong>Major:</strong> {userData.major}
+                  <strong>Major:</strong> {userData.major !== 'major' ? userData.grade : 'None'}
                 </p>
                 <button onClick={handleEditClick}>Edit</button>
               </>
@@ -306,47 +363,47 @@ export const Profilecontainer = () => {
         </div>
         <div className="bottom-line" />
       </div>
-        
-  <div className="preferences-container">
-  <div className="availability-section">
-    <div className="availability-info">
-      <h2>Availability</h2>
-      <ul className="availability-list">
-        {daysOfWeek.map((day) => (
-           <li key={day}>
-           <strong>{day}:</strong>{" "}
-        <span className="availability-time">
-          {userData.availability && userData.availability[day]
-            ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
-            : "No Availability Selected"}
-        </span>
-      </li>
-    ))}
-  </ul>
-</div>
 
-    <button id="avail-button" onClick={handleAvailabilityButtonClick}>
-      Edit Availability
-    </button>
-  </div>
+      <div className="preferences-container">
+        <div className="availability-section">
+          <div className="availability-info">
+            <h2>Availability</h2>
+            <ul className="availability-list">
+              {daysOfWeek.map((day) => (
+                <li key={day}>
+                  <strong>{day}:</strong>{" "}
+                  <span className="availability-time">
+                    {userData.availability && userData.availability[day]
+                      ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
+                      : "No Availability Selected"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-  <div className="locations-section">
-    <div className="locations-info">
-      <h2>Favorite Locations</h2>
-      {fav_locations.length > 0 ? (
-        <ul>
-          {fav_locations.map((location, index) => (
-            <li key={index}>{location}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No favorite locations set.</p>
-      )}
-    </div>
-    <button id="location-button" onClick={handleLocationButtonClick}>
-      Edit Locations
-    </button>
-  </div>
+          <button id="avail-button" onClick={handleAvailabilityButtonClick}>
+            Edit Availability
+          </button>
+        </div>
+
+        <div className="locations-section">
+          <div className="locations-info">
+            <h2>Favorite Locations</h2>
+            {fav_locations.length > 0 ? (
+              <ul>
+                {fav_locations.map((location, index) => (
+                  <li key={index}>{location}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No favorite locations set.</p>
+            )}
+          </div>
+          <button id="location-button" onClick={handleLocationButtonClick}>
+            Edit Locations
+          </button>
+        </div>
 
         {/* Availability Modal */}
         <Modal id="avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
@@ -362,7 +419,7 @@ export const Profilecontainer = () => {
                     {day} - {userData.availability && userData.availability[day]
                       ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
                       : "No Availability Selected"}
-                </Button>
+                  </Button>
                 ))}
               </>
             ) : (

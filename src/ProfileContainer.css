@@ -66,11 +66,13 @@ input[type="file"] {
 
 .profile-details p,
 .profile-details input[type="text"],
+.profile-details select,
 .profile-details button {
     margin-bottom: 1rem;
 }
 
-.profile-details input[type="text"] {
+.profile-details input[type="text"],
+.profile-details select {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ced4da;
@@ -121,20 +123,23 @@ button:hover {
 .preferences-container {
     display: flex;
     justify-content: space-between;
-  }
-  
-  .preferences-buttons {
-    width: 30%;
-  }
-  
-  .preferences-info {
-    width: 60%;
-  }
+}
 
-  /* .availability-time {
+.preferences-buttons {
+    width: 30%;
+}
+
+.preferences-info {
+    width: 60%;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+/* .availability-time {
     font-size: 12px; 
   }
   */
-
-
-  
