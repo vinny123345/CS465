@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import {  getEmail } from './DBUtils';
 import { Link } from 'react-router-dom';
+import './ForgotPasword.css'
 
 export function PasswordReset() {
   const [netId, setNetId] = useState("");
@@ -32,11 +33,9 @@ export function PasswordReset() {
           required
         />
         <br/>
-        <br/>
         <button type="submit">Send password reset email</button>
       </form>
 
-      <br/>
       <Link to="/login"> Log in </Link>
 
 
