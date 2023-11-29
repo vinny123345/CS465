@@ -33,8 +33,20 @@ export const UserCardSent = ({
             {requestObject.time
               ? requestObject.time.startTime + "-" + requestObject.time.endTime
               : "time"}{" "}
-            @ {requestObject.location ? requestObject.location : "location"}
-            {/* "Friday" is hardcoded for now */}
+
+          <p>
+              Location:{" "}
+              {userObject.fav_locations === undefined
+                ? "No favorite locations"
+                : userObject.fav_locations.map((location) => {
+                    return location + ", ";
+                  })}
+          </p>
+
+
+            {/* @ {requestObject.location ? requestObject.location : "location"} */}
+
+          
           </Card.Text>
         </Card.Body>
         <Card.Body>
@@ -77,11 +89,26 @@ export const UserCardSent = ({
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>Gender: {userObject.gender}</p>
+          <p>Grade: {userObject.grade}</p>
+          <p>Major: {userObject.major}</p>
+
+          <p>
+              Location:{" "}
+              {userObject.fav_locations === undefined
+                ? "No favorite locations"
+                : userObject.fav_locations.map((location) => {
+                    return location + ", ";
+                  })}
+          </p>
+
+
           {requestObject.date ? requestObject.date : "Date"}:
           {requestObject.time
             ? requestObject.time.startTime + "-" + requestObject.time.endTime
             : "time"}{" "}
-          @ {requestObject.location ? requestObject.location : "location"}
+
+          {/* @ {requestObject.location ? requestObject.location : "location"} */}
         </Modal.Body>
         <Modal.Footer>
           Contact {userObject.first_name ? userObject.first_name : "First Name"}{" "}
