@@ -46,7 +46,7 @@ export const UserCardSent = ({
             okText="Yes"
             cancelText="No"
           >
-            {onAccept ? <Button variant="success">Accept</Button> : <></>}
+            {onAccept ? <Button variant="success" style={{ float: "left" }}>Accept</Button> : <></>}
           </Popconfirm>
 
           <Popconfirm
