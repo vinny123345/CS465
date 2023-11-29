@@ -8,6 +8,7 @@ import {
 } from "./DBUtils";
 import CalendarComponent from "./CalendarComponent";
 import CompanionsList from "./CompanionsList"; // new component for listing companions
+import "./searchcontainer.css";
 
 export const Searchcontainer = () => {
   const { user } = useParams();
@@ -88,12 +89,10 @@ export const Searchcontainer = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="search-page-window">
       {userSelectedDate ? (
         <>
-          <p style={styles.selectedDate}>
-            Your selected date is: {userSelectedDate.toDateString()}
-          </p>
+          <p>Your selected date is: {userSelectedDate.toDateString()}</p>
           <CalendarComponent onSaveDate={handleSaveDate} />
           <label>
             <input
@@ -121,12 +120,6 @@ export const Searchcontainer = () => {
       )}
     </div>
   );
-};
-
-const styles = {
-  container: { textAlign: "center" },
-  selectedDate: { fontSize: "16px" },
-  // Add more styles as needed
 };
 
 export default Searchcontainer;

@@ -8,7 +8,12 @@ import Modal from "react-bootstrap/Modal";
 
 import { message, Popconfirm } from "antd";
 
-export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) => {
+export const UserCardSent = ({
+  userObject,
+  requestObject,
+  onAccept,
+  onReject,
+}) => {
   // for user profile popup
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -19,12 +24,16 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow}>
           <Card.Title>
-            {userObject.last_name ? userObject.last_name : 'Last Name'} {userObject.first_name ? userObject.first_name : 'First Name'} ({userObject.netid ? userObject.netid : 'netid'})
+            {userObject.last_name ? userObject.last_name : "Last Name"}{" "}
+            {userObject.first_name ? userObject.first_name : "First Name"} (
+            {userObject.netid ? userObject.netid : "netid"})
           </Card.Title>
           <Card.Text>
-            {requestObject.date ? requestObject.date : 'Date'}:
-            {requestObject.time ? requestObject.time.startTime + '-' + requestObject.time.endTime : 'time'} @{" "}
-            {requestObject.location ? requestObject.location : 'location'}
+            {requestObject.date ? requestObject.date : "Date"}:
+            {requestObject.time
+              ? requestObject.time.startTime + "-" + requestObject.time.endTime
+              : "time"}{" "}
+            @ {requestObject.location ? requestObject.location : "location"}
             {/* "Friday" is hardcoded for now */}
           </Card.Text>
         </Card.Body>
@@ -62,17 +71,21 @@ export const UserCardSent = ({ userObject,requestObject, onAccept, onReject }) =
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-          {userObject.last_name ? userObject.last_name : 'Last Name'} {userObject.first_name ? userObject.first_name : 'First Name'} ({userObject.netid ? userObject.netid : 'netid'})
-
+            {userObject.last_name ? userObject.last_name : "Last Name"}{" "}
+            {userObject.first_name ? userObject.first_name : "First Name"} (
+            {userObject.netid ? userObject.netid : "netid"})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        {requestObject.date ? requestObject.date : 'Date'}:
-        {requestObject.time ? requestObject.time.startTime + '-' + requestObject.time.endTime : 'time'} @{" "}
-            {requestObject.location ? requestObject.location : 'location'}
+          {requestObject.date ? requestObject.date : "Date"}:
+          {requestObject.time
+            ? requestObject.time.startTime + "-" + requestObject.time.endTime
+            : "time"}{" "}
+          @ {requestObject.location ? requestObject.location : "location"}
         </Modal.Body>
         <Modal.Footer>
-          Contact {userObject.first_name ? userObject.first_name : 'First Name'} at {userObject.netid ? userObject.netid : 'netid'}@illinois.edu !
+          Contact {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+          at {userObject.netid ? userObject.netid : "netid"}@illinois.edu !
         </Modal.Footer>
       </Modal>
     </>
@@ -109,9 +122,18 @@ export const UserCardSearch = ({
             {userObject.last_name} {userObject.first_name} ({userObject.netid})
           </Card.Title>
           <Card.Text>
-            {userObject.availability[dayOfWeek].startTime}-
-            {userObject.availability[dayOfWeek].endTime} @{" "}
-            {userObject.fav_locations}
+            <p>
+              Time: {userObject.availability[dayOfWeek].startTime}-
+              {userObject.availability[dayOfWeek].endTime}
+            </p>
+            <p>
+              Location:{" "}
+              {userObject.fav_locations === undefined
+                ? "No favorite locations"
+                : userObject.fav_locations.map((location) => {
+                    return location + ", ";
+                  })}
+            </p>
           </Card.Text>
         </Card.Body>
         <Card.Body>
@@ -155,7 +177,11 @@ export const UserCardSearch = ({
             {userObject.last_name} {userObject.first_name}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <p>Gender: {userObject.gender}</p>
+          <p>Grade: {userObject.grade}</p>
+          <p>Major: {userObject.major}</p>
+        </Modal.Body>
       </Modal>
     </>
   );

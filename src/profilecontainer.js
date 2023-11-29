@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getUser, updateUser, getNetId } from "./DBUtils";
-import './ProfileContainer.css';
-import { Button, Modal, Nav, Tab, ListGroup, Form } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons';
-import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
-import { useUserLoggedIn } from './UserLoggedIn';
+import "./ProfileContainer.css";
+import { Button, Modal, Nav, Tab, ListGroup, Form } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
+import { useUserLoggedIn } from "./UserLoggedIn";
 
 export const Profilecontainer = () => {
   // NEW: get the netid
@@ -28,22 +28,22 @@ export const Profilecontainer = () => {
   const [endTime, setEndTime] = useState(null);
 
   const [fav_locations, setFav_locations] = useState([]);
-  const [activeTab, setActiveTab] = useState('restaurants');
+  const [activeTab, setActiveTab] = useState("restaurants");
 
   const [error, setError] = useState({});
 
   // Validation function
   const validate = () => {
     let newErrors = {};
-    if (userData.first_name === 'firstname') newErrors.first_name = 'First name is required';
-    if (!userData.last_name === 'lastname') newErrors.last_name = 'Last name is required';
+    if (userData.first_name === "firstname")
+      newErrors.first_name = "First name is required";
+    if (!userData.last_name === "lastname")
+      newErrors.last_name = "Last name is required";
     // if (!userData.grade) newErrors.grade = 'Grade is required';
-    if (userData.gender === 'gender') newErrors.gender = 'Gender is required';
+    if (userData.gender === "gender") newErrors.gender = "Gender is required";
     setError(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,9 +62,9 @@ export const Profilecontainer = () => {
 
           const { startTime, endTime } = data.availability[selectedDay] || {};
 
-          console.log('Selected Day:', selectedDay);
-          console.log('Start Time:', startTime);
-          console.log('End Time:', endTime);
+          console.log("Selected Day:", selectedDay);
+          console.log("Start Time:", startTime);
+          console.log("End Time:", endTime);
           setSelectedDay(selectedDay || null);
           setStartTime(startTime || null);
           setEndTime(endTime || null);
@@ -93,7 +93,7 @@ export const Profilecontainer = () => {
   const handleSaveClick = async () => {
     if (!validate()) {
       // If validation fails, stop the function
-      return
+      return;
     }
 
     try {
@@ -124,14 +124,23 @@ export const Profilecontainer = () => {
   }
 
   const handleAvailabilityButtonClick = async () => {
-
     setShowAvailabilityModal(true);
     setInitialAvailabilityView(true);
     // Set selected day, start time, and end time to current values from user data
     setUserData(await getUser(user));
-    setSelectedDay(userData.availability ? Object.keys(userData.availability)[0] : null);
-    setStartTime(userData.availability ? userData.availability[selectedDay]?.startTime || null : null);
-    setEndTime(userData.availability ? userData.availability[selectedDay]?.endTime || null : null);
+    setSelectedDay(
+      userData.availability ? Object.keys(userData.availability)[0] : null
+    );
+    setStartTime(
+      userData.availability
+        ? userData.availability[selectedDay]?.startTime || null
+        : null
+    );
+    setEndTime(
+      userData.availability
+        ? userData.availability[selectedDay]?.endTime || null
+        : null
+    );
   };
 
   const handleSaveAvailability = async () => {
@@ -139,7 +148,9 @@ export const Profilecontainer = () => {
       var latestUserData = await getUser(user);
       if (selectedDay && startTime !== null && endTime !== null) {
         // Clone the existing availability object or create a new one if it doesn't exist
-        const existingAvailability = userData.availability ? { ...userData.availability } : {};
+        const existingAvailability = userData.availability
+          ? { ...userData.availability }
+          : {};
 
         // Update the selected day with the new availability
         existingAvailability[selectedDay] = {
@@ -159,13 +170,15 @@ export const Profilecontainer = () => {
         const refreshedUserData = await getUser(user);
         setUserData(refreshedUserData);
 
-        console.log(`Saved availability for ${selectedDay}: ${startTime} - ${endTime}`);
+        console.log(
+          `Saved availability for ${selectedDay}: ${startTime} - ${endTime}`
+        );
       }
 
       setSelectedDay(null);
       handleCloseAvailabilityModal();
     } catch (error) {
-      console.error('Error saving availability:', error);
+      console.error("Error saving availability:", error);
     }
   };
 
@@ -179,19 +192,44 @@ export const Profilecontainer = () => {
     setInitialAvailabilityView(false);
 
     // Set start time and end time based on the selected day's availability
-    setStartTime(userData.availability ? userData.availability[day]?.startTime || null : null);
-    setEndTime(userData.availability ? userData.availability[day]?.endTime || null : null);
+    setStartTime(
+      userData.availability
+        ? userData.availability[day]?.startTime || null
+        : null
+    );
+    setEndTime(
+      userData.availability ? userData.availability[day]?.endTime || null : null
+    );
   };
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  const restaurantLocations = ['Bangkok Thai', 'Chipotle', 'Mia Zas', 'Potbellys', 'Raising Canes', 'Shawarma Joint'];
-  const cafeteriaLocations = ['Ikenberry Cafeteria', 'Illinois Street Cafeteria', 'Lincoln Avenue Cafeteria', 'Pennsylvania Avenue Cafeteria'];
-
+  const restaurantLocations = [
+    "Bangkok Thai",
+    "Chipotle",
+    "Mia Zas",
+    "Potbellys",
+    "Raising Canes",
+    "Shawarma Joint",
+  ];
+  const cafeteriaLocations = [
+    "Ikenberry Cafeteria",
+    "Illinois Street Cafeteria",
+    "Lincoln Avenue Cafeteria",
+    "Pennsylvania Avenue Cafeteria",
+  ];
 
   const handleCloseLocationModal = () => {
     setShowLocationModal(false);
     // Reset tab to default when modal is closed
-    setActiveTab('restaurants');
+    setActiveTab("restaurants");
   };
 
   const handleRemoveLocation = async () => {
@@ -206,11 +244,11 @@ export const Profilecontainer = () => {
 
       await updateUser(user, updatedUserData);
 
-      console.log('Saved favorites:', fav_locations);
+      console.log("Saved favorites:", fav_locations);
 
       handleCloseLocationModal();
     } catch (error) {
-      console.error('Error saving favorites:', error);
+      console.error("Error saving favorites:", error);
     }
   };
 
@@ -225,7 +263,7 @@ export const Profilecontainer = () => {
   };
 
   return (
-    <>
+    <div className="profile-page-window">
       <div className="profile">
         <div className="profile-container">
           <div className="profile-image-section">
@@ -245,16 +283,32 @@ export const Profilecontainer = () => {
                     onChange={handleImageChange}
                   ></input>
                 </div>
-                <div className={userData.profile_pic === "default" ? 'default-profile-picture' : 'profile-picture'}>
+                <div
+                  className={
+                    userData.profile_pic === "default"
+                      ? "default-profile-picture"
+                      : "profile-picture"
+                  }
+                >
                   {/* <div className="profile-picture"> */}
-                  {userData.profile_pic !== "default" && <img src={userData.profile_pic} alt="Profile" />}
+                  {userData.profile_pic !== "default" && (
+                    <img src={userData.profile_pic} alt="Profile" />
+                  )}
                 </div>
               </div>
             ) : (
               // <div className="profile-picture">
-              <div className={userData.profile_pic === "default" ? 'default-profile-picture' : 'profile-picture'}>
+              <div
+                className={
+                  userData.profile_pic === "default"
+                    ? "default-profile-picture"
+                    : "profile-picture"
+                }
+              >
                 {/* Render image from Base64 string */}
-                {userData.profile_pic !== "default" && <img src={userData.profile_pic} alt="Profile_Image" />}
+                {userData.profile_pic !== "default" && (
+                  <img src={userData.profile_pic} alt="Profile_Image" />
+                )}
                 {/* {console.log(userData.profile_pic)} */}
               </div>
               // <div className="profile-picture">{userData.profile_pic}</div>
@@ -268,33 +322,51 @@ export const Profilecontainer = () => {
             {isEditing ? (
               <>
                 <div>
-                  <label>First Name <span style={{ color: 'red' }}>*</span></label>
+                  <label>
+                    First Name <span style={{ color: "red" }}>*</span>
+                  </label>
                   <input
                     type="text"
                     name="first_name"
                     className="form-control"
                     placeholder="First Name"
                     // value={userData.first_name}
-                    value={userData.first_name !== 'firstname' ? userData.first_name : ''}
+                    value={
+                      userData.first_name !== "firstname"
+                        ? userData.first_name
+                        : ""
+                    }
                     onChange={handleChange}
                   />
-                  {error.first_name && <p className="error-message">{error.first_name}</p>}
+                  {error.first_name && (
+                    <p className="error-message">{error.first_name}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label>Last Name <span style={{ color: 'red' }}>*</span></label>
+                  <label>
+                    Last Name <span style={{ color: "red" }}>*</span>
+                  </label>
                   <input
                     type="text"
                     name="last_name"
                     className="form-control"
                     placeholder="Last Name"
-                    value={userData.last_name !== 'lastname' ? userData.last_name : ''}
+                    value={
+                      userData.last_name !== "lastname"
+                        ? userData.last_name
+                        : ""
+                    }
                     onChange={handleChange}
                   />
-                  {error.last_name && <p className="error-message">{error.last_name}</p>}
+                  {error.last_name && (
+                    <p className="error-message">{error.last_name}</p>
+                  )}
                 </div>
                 <div>
-                  <label>Gender <span style={{ color: 'red' }}>*</span></label>
+                  <label>
+                    Gender <span style={{ color: "red" }}>*</span>
+                  </label>
                   <select
                     name="gender"
                     className="form-control"
@@ -305,10 +377,10 @@ export const Profilecontainer = () => {
                     <option value="Female">Female</option>
                     <option value="Other">Non-Binary</option>
                   </select>
-                  {error.gender && <p className="error-message">{error.gender}</p>}
-
+                  {error.gender && (
+                    <p className="error-message">{error.gender}</p>
+                  )}
                 </div>
-
 
                 <label>Grade</label>
                 <select
@@ -351,10 +423,12 @@ export const Profilecontainer = () => {
                   <strong>Gender:</strong> {userData.gender}
                 </p>
                 <p>
-                  <strong>Grade:</strong> {userData.grade !== 'grade' ? userData.grade : 'None'}
+                  <strong>Grade:</strong>{" "}
+                  {userData.grade !== "grade" ? userData.grade : "None"}
                 </p>
                 <p>
-                  <strong>Major:</strong> {userData.major !== 'major' ? userData.grade : 'None'}
+                  <strong>Major:</strong>{" "}
+                  {userData.major !== "major" ? userData.grade : "None"}
                 </p>
                 <button onClick={handleEditClick}>Edit</button>
               </>
@@ -406,7 +480,11 @@ export const Profilecontainer = () => {
         </div>
 
         {/* Availability Modal */}
-        <Modal id="avail-modal" show={showAvailabilityModal} onHide={handleCloseAvailabilityModal}>
+        <Modal
+          id="avail-modal"
+          show={showAvailabilityModal}
+          onHide={handleCloseAvailabilityModal}
+        >
           <Modal.Header closeButton={false}>
             <Modal.Title>Edit Availability</Modal.Title>
           </Modal.Header>
@@ -415,8 +493,13 @@ export const Profilecontainer = () => {
               <>
                 <p>Select a day to edit availability:</p>
                 {daysOfWeek.map((day, index) => (
-                  <Button id="daybutton" key={index} onClick={() => handleDayButtonClick(day)}>
-                    {day} - {userData.availability && userData.availability[day]
+                  <Button
+                    id="daybutton"
+                    key={index}
+                    onClick={() => handleDayButtonClick(day)}
+                  >
+                    {day} -{" "}
+                    {userData.availability && userData.availability[day]
                       ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
                       : "No Availability Selected"}
                   </Button>
@@ -430,7 +513,7 @@ export const Profilecontainer = () => {
                   <Form.Label>Start Time</Form.Label>
                   <Form.Control
                     as="select"
-                    value={startTime !== null ? startTime : ''}
+                    value={startTime !== null ? startTime : ""}
                     onChange={(e) => setStartTime(e.target.value)}
                   >
                     <option value="">--</option>
@@ -450,7 +533,7 @@ export const Profilecontainer = () => {
                   <Form.Label>End Time</Form.Label>
                   <Form.Control
                     as="select"
-                    value={endTime !== null ? endTime : ''}
+                    value={endTime !== null ? endTime : ""}
                     onChange={(e) => setEndTime(e.target.value)}
                   >
                     <option value="">--</option>
@@ -468,8 +551,15 @@ export const Profilecontainer = () => {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={initialAvailabilityView ? handleCloseAvailabilityModal : handleBackButtonClick}>
-              {initialAvailabilityView ? 'Cancel' : 'Back'}
+            <Button
+              variant="secondary"
+              onClick={
+                initialAvailabilityView
+                  ? handleCloseAvailabilityModal
+                  : handleBackButtonClick
+              }
+            >
+              {initialAvailabilityView ? "Cancel" : "Back"}
             </Button>
             <Button variant="primary" onClick={handleSaveAvailability}>
               Save
@@ -478,12 +568,19 @@ export const Profilecontainer = () => {
         </Modal>
 
         {/* Location Modal */}
-        <Modal id="avail-modal" show={showLocationModal} onHide={handleCloseLocationModal}>
+        <Modal
+          id="avail-modal"
+          show={showLocationModal}
+          onHide={handleCloseLocationModal}
+        >
           <Modal.Header closeButton={false}>
             <Modal.Title>Edit Locations</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Tab.Container activeKey={activeTab} onSelect={(key) => setActiveTab(key)}>
+            <Tab.Container
+              activeKey={activeTab}
+              onSelect={(key) => setActiveTab(key)}
+            >
               <Nav variant="tabs">
                 <Nav.Item>
                   <Nav.Link eventKey="restaurants">Restaurants</Nav.Link>
@@ -498,7 +595,11 @@ export const Profilecontainer = () => {
                     {restaurantLocations.map((location, index) => (
                       <ListGroup.Item key={index} action>
                         <FontAwesomeIcon
-                          icon={fav_locations.includes(location) ? solidStar : regularStar}
+                          icon={
+                            fav_locations.includes(location)
+                              ? solidStar
+                              : regularStar
+                          }
                           className="star-icon"
                           onClick={() => handleStarClick(location)}
                         />
@@ -512,7 +613,11 @@ export const Profilecontainer = () => {
                     {cafeteriaLocations.map((location, index) => (
                       <ListGroup.Item key={index} action>
                         <FontAwesomeIcon
-                          icon={fav_locations.includes(location) ? solidStar : regularStar}
+                          icon={
+                            fav_locations.includes(location)
+                              ? solidStar
+                              : regularStar
+                          }
                           className="star-icon"
                           onClick={() => handleStarClick(location)}
                         />
@@ -533,9 +638,7 @@ export const Profilecontainer = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-
       </div>
-
-    </>
+    </div>
   );
 };

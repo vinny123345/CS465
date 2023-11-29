@@ -5,10 +5,6 @@ import { db } from "./DBUtils";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-// const sendInvitation = (user, companion) => {
-//   console.log("send invitation");
-// };
-
 const { v4: uuidv4 } = require("uuid");
 
 const generateUniqueKey = () => {
@@ -26,9 +22,6 @@ const sendInvitation = async (
   try {
     const snapshot = await get(ref(db, `/users`));
     if (snapshot.exists()) {
-      console.log(snapshot.val());
-      console.log(user);
-
       const currnetid = user;
       const effectednetid = companion.netid;
 
@@ -38,9 +31,6 @@ const sendInvitation = async (
       //if (currUserObj) {
       // Generate a unique key for the new request
       const newRequestId = generateUniqueKey();
-      console.log("hihiehfiefef start");
-      console.log(commonTime);
-      console.log("hihiehfiefef end");
 
       // Create an object with the new request using the unique key
       const newRequest = {
@@ -51,7 +41,6 @@ const sendInvitation = async (
         location: commonLocation,
         // Other properties of the request...
       };
-      console.log(newRequest);
       // TODO: get the current sent_reuquests
       // TODO: push the newRquest object into the requests
 
@@ -92,7 +81,6 @@ const sendInvitation = async (
       );
       return Promise.resolve();
     } else {
-      console.log("No data available");
       return Promise.reject(new Error("No data available"));
     }
   } catch (error) {
@@ -117,101 +105,35 @@ const checkSentRequests = (sentRequests, companions) => {
   if (companions.length === 0) {
     return companions;
   }
-  // iterate through the sent requests
+  // iterate through the sent requests and filter out the companions with the same netid
   for (const i in sentRequests) {
-    console.log(sentRequests[i]);
-    // filter the companions list based on the date and start time and end time
-    // if the netId, date, start time and end time are the same, remove the companion from the list
-    // Very initial implementation, need to be improved
     companions = companions.filter(
-      (companion) =>
-        companion.netid !== sentRequests[i].netid ||
-        companion.availability[sentRequests[i].date].startTime !==
-          sentRequests[i].time.startTime ||
-        companion.availability[sentRequests[i].date].endTime !==
-          sentRequests[i].time.endTime
+      (companion) => companion.netid !== sentRequests[i].netid
     );
   }
   return companions;
 };
 
 const findCommonTime = async (userid, companion, dayOfWeek) => {
-  // find the common time between the user and the companion
-  // return the common time
-  // handle the case of every undefined and null
-  const user = (await get(ref(db, `/users/${userid}`))).val();
-
-  const userAvailability = user.availability;
-  const companionAvailability = companion.availability;
-  const userStart = userAvailability[dayOfWeek].startTime;
-  const userEnd = userAvailability[dayOfWeek].endTime;
-  const companionStart = companionAvailability[dayOfWeek].startTime;
-  const companionEnd = companionAvailability[dayOfWeek].endTime;
-  // handle the case of every undefined and null
-  console.log("testing here");
-  console.log(userStart);
-  console.log(userEnd);
-  console.log(companionStart);
-  console.log(companionEnd);
-  if (
-    userStart === null ||
-    userStart === undefined ||
-    userEnd === null ||
-    userEnd === undefined
-  ) {
-    return {
-      startTime: companionStart,
-      endTime: companionEnd,
-    };
-  }
-  if (
-    companionStart === null ||
-    companionStart === undefined ||
-    companionEnd === null ||
-    companionEnd === undefined
-  ) {
-    return {
-      startTime: userStart,
-      endTime: userEnd,
-    };
-  }
-  if (companionStart >= userEnd || companionEnd <= userStart) {
-    return {
-      startTime: companionStart,
-      endTime: companionEnd,
-    };
-  } else {
-    console.log(
-      Math.max(
-        new Date(`2020-01-01 ${userStart}`),
-        new Date(`2020-01-01 ${companionStart}`)
-      )
-    );
-    console.log(typeof userStart);
-    console.log(typeof companionStart);
-    const start1 = new Date(`2020-01-01 ${userStart}`);
-    const start2 = new Date(`2020-01-01 ${companionStart}`);
-    const end1 = new Date(`2020-01-01 ${userEnd}`);
-    const end2 = new Date(`2020-01-01 ${companionEnd}`);
-    let startTimeR = companionStart;
-    let endTimeR = userEnd;
-
-    if (start1 < start2) {
-      startTimeR = companionStart;
-    } else {
-      startTimeR = userStart;
+  try {
+    const userData = await get(ref(db, `/users/${userid}`));
+    if (!userData.exists()) {
+      console.error("User data does not exist for userid:", userid);
+      return null;
     }
+    const user = userData.val();
 
-    if (end1 < end2) {
-      endTimeR = userEnd;
+    const userAvailability = user.availability[dayOfWeek];
+    // return the user availability
+    // if no user availability, return null
+    if (userAvailability === null || userAvailability === undefined) {
+      return null;
     } else {
-      endTimeR = companionEnd;
+      return userAvailability;
     }
-
-    return {
-      startTime: startTimeR,
-      endTime: endTimeR,
-    };
+  } catch (error) {
+    console.error("Error in findCommonTime:", error);
+    return null;
   }
 };
 
@@ -225,13 +147,13 @@ const findCommonLocation = async (userid, companion) => {
   const companionLocations = companion.fav_locations;
   // handle the case of every undefined and null
   if (userLocations === null || userLocations === undefined) {
-    return companionLocations[0];
+    return "User has no favorite locations";
   }
   if (companionLocations === null || companionLocations === undefined) {
     return userLocations[0];
   }
   if (userLocations.length === 0) {
-    return companionLocations[0];
+    return "User has no favorite locations";
   }
   if (companionLocations.length === 0) {
     return userLocations[0];
