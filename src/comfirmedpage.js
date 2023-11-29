@@ -364,6 +364,7 @@ function ComfirmedPage() {
                 // }
 
   return (
+    <div className= "confirmedpage">
     <Tabs defaultActiveKey="Sent" id="fill-tab-example" className="mb-3" fill>
       <Tab eventKey="Sent" title="Sent">
         <div className="confirmed-page-window">
@@ -412,6 +413,7 @@ function ComfirmedPage() {
         </div>
       </Tab>
     </Tabs>
+    </div>
   );
 }
 

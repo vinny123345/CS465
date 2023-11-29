@@ -38,10 +38,13 @@ import {Button} from 'react-bootstrap';
 
 const App = () => {
   var { user } = useParams();
+  const location = useLocation();
 
   useEffect(() => {
     user = getUser(user);
   }, []);
+
+  const isLinkActive = (path) => location.pathname === path;
 
   return (
     <div className="App">
@@ -53,21 +56,27 @@ const App = () => {
         </div>
       </div>
       <div className="navtab">
-      <div className="profilelink">
-          <Link to={`/profile/${user}`} id="link1">
-            <FontAwesomeIcon icon={farUser} /> Profile
-          </Link>
-        </div>
-        <div className="searchlink">
-          <Link to={`/search/${user}`} id="link2">
-            <FontAwesomeIcon icon={faSearch} /> Search
-          </Link>
-        </div>
-        <div className="confirmlink">
-          <Link to={`/confirm/${user}`} id="link3">
-            <FontAwesomeIcon icon={faCheck} /> Confirm
-          </Link>
-        </div>
+        <Button
+          as={Link}
+          to={`/profile/${user}`}
+          className={`profilelink ${isLinkActive(`/profile/${user}`) ? 'active' : ''}`}
+        >
+          <FontAwesomeIcon icon={farUser} /> Profile
+        </Button>
+        <Button
+          as={Link}
+          to={`/search/${user}`}
+          className={`searchlink ${isLinkActive(`/search/${user}`) ? 'active' : ''}`}
+        >
+          <FontAwesomeIcon icon={faSearch} /> Search
+        </Button>
+        <Button
+          as={Link}
+          to={`/confirm/${user}`}
+          className={`confirmlink ${isLinkActive(`/confirm/${user}`) ? 'active' : ''}`}
+        >
+          <FontAwesomeIcon icon={faCheck} /> Confirm
+        </Button>
       </div>
       <Outlet />
     </div>

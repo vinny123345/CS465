@@ -89,35 +89,37 @@ export const Searchcontainer = () => {
   };
 
   return (
-    <div className="search-page-window">
-      {userSelectedDate ? (
-        <>
-          <p>Your selected date is: {userSelectedDate.toDateString()}</p>
-          <CalendarComponent onSaveDate={handleSaveDate} />
-          <label>
-            <input
-              type="checkbox"
-              checked={isTimeFilterApplied}
-              onChange={handleTimeFilterChange}
-            />
-            Time Filter
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={isLocationFilterApplied}
-              onChange={handleLocationFilterChange}
-            />
-            Location Filter
-          </label>
-          <CompanionsList companions={companions} date={userSelectedDate} />
-        </>
-      ) : (
-        <>
-          <h1>Choose Your Date</h1>
-          <CalendarComponent onSaveDate={handleSaveDate} />
-        </>
-      )}
+    <div className = "searchpage">
+      <div className="search-page-window">
+        {userSelectedDate ? (
+          <>
+            <p>Your selected date is: {userSelectedDate.toDateString()}</p>
+            <CalendarComponent onSaveDate={handleSaveDate} />
+            <label>
+              <input
+                type="checkbox"
+                checked={isTimeFilterApplied}
+                onChange={handleTimeFilterChange}
+              />
+              Time Filter
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={isLocationFilterApplied}
+                onChange={handleLocationFilterChange}
+              />
+              Location Filter
+            </label>
+            <CompanionsList companions={companions} date={userSelectedDate} />
+          </>
+        ) : (
+          <>
+            <h1>Choose Your Date</h1>
+            <CalendarComponent onSaveDate={handleSaveDate} />
+          </>
+        )}
+      </div>
     </div>
   );
 };

@@ -16,7 +16,6 @@
 
 #avail-button,
 #location-button {
-    margin-top: 20%;
     width: auto;
 }
 
@@ -81,7 +80,7 @@ input[type="file"] {
 
 button {
     padding: 0.5rem 1rem;
-    background-color: #007bff;
+    background-color: rgb(30, 56, 119);
     border: none;
     border-radius: 0.25rem;
     color: white;
@@ -93,11 +92,12 @@ button {
 } */
 
 button:hover {
-    background-color: #0056b3;
+    background-color: rgb(30, 56, 119);
 }
 
 .edit-button {
     display: block;
+    background-color: rgb(30, 56, 119);
 }
 
 .bottom-line {
@@ -119,10 +119,30 @@ button:hover {
     font-family: 'Montserrat', sans-serif;
 }
 
+.visbutton {
+    width: 100%;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.visbutton .btn-secondary {
+    background-color: rgb(30, 56, 119) !important;
+    border-color: rgb(30, 56, 119) !important;
+  }
+    
+.visbutton .btn-secondary.active {
+    background-color: rgb(29, 88, 167) !important; 
+    border-color: rgb(29, 88, 167) !important;
+  }
 
 .preferences-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    height: 55vh; /* Adjust the height as needed */
+    overflow-y: auto;
 }
 
 .preferences-buttons {

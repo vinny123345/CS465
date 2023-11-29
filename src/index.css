@@ -4,8 +4,7 @@
   font-family: 'Montserrat', sans-serif;
   /* background-color: #f1faee; */
   /* Lightest color for the background */
-  color: #1d3557;
-  /* Dark blue for text */
+  background-color:rgb(248, 250, 252);
 }
 
 .header-container {
@@ -13,9 +12,10 @@
   justify-content: space-between;
   align-items: center;
   /* padding: 10px; */
-  background-color: #457b9d;
+  background-color: rgb(245, 130, 30);
   /* Medium blue for header */
   color: white;
+  padding-bottom: 3%;
 }
 
 .header-container img {
@@ -25,15 +25,13 @@
 }
 
 .logoutlink .btn-primary {
-  background-color: #e63946;
+  background-color: rgb(30, 56, 119);
   /* Accent color for logout button */
-  border: none;
 }
-
 
 .navtab {
   position: fixed;
-  font-size: 0.9em;
+  font-size: 1.1em;
   /* Fixing the navbar to a position */
   bottom: 0;
   /* Aligning it to the bottom of the screen */
@@ -42,54 +40,45 @@
   /* Ensuring it spans the full width of the screen */
   display: flex;
   justify-content: space-around;
-  background-color: #a8dadc;
-  /* Light blue for navigation tab */
-  padding: 10px 0;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  /* Optional: Adding a subtle shadow for depth */
-  z-index: 1000;
-  /* Ensures the navbar is above other content */
-}
-
-.navtab div {
-  flex: 1;
-  text-align: center;
-}
-
-.navtab a {
-  color: #1d3557;
-  /* Dark blue for links */
-  text-decoration: none;
-  font-size: 1.1em;
-}
-
-.navtab a:hover {
+  background-color: rgb(245, 130, 30);
   color: #ffffff;
-  /* White text for high contrast */
-  background-color: #1d3557;
-  /* Dark blue background for standout effect */
   padding: 10px;
-  /* Add some padding for a button-like appearance */
-  border-radius: 4px;
-  /* Rounded corners for a smooth look */
-  font-weight: bold;
-  /* Make the font bold */
-  text-decoration: none;
-  /* Remove underline */
-  transition: all 0.3s ease;
-  /* Smooth transition for hover effect */
+  text-decoration: none; 
 }
 
+.btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  background-color: rgb(30, 56, 119) !important;
+}
 
 .navtab .profilelink,
 .navtab .searchlink,
 .navtab .confirmlink {
   padding: 10px;
+  color: rgb(30, 56, 119);
+  text-decoration: none; /* Remove default underline */
+  transition: color 0.3s ease; /* Add smooth transition for text color */
+}
+
+.navtab .btn {
+  padding: 10px;
+  color: rgb(30, 56, 119);
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navtab .btn:hover,
+.navtab .btn:focus,
+.navtab .btn:active {
+  background-color: rgb(30, 56, 119) !important;
+  color: #ffffff;
+  border: none; /* Remove border on hover, focus, or active */
+  box-shadow: none;
 }
 
 /* FontAwesome Icon Styles */
 .navtab .faIcon {
   margin-right: 5px;
-  color: #e63946;
   /* Accent color for icons */
 }

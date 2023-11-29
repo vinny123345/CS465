@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getUser, updateUser, getNetId } from "./DBUtils";
 import "./ProfileContainer.css";
-import { Button, Modal, Nav, Tab, ListGroup, Form } from "react-bootstrap";
+import { Button, Modal, Nav, Tab, ListGroup, Form, ButtonGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
@@ -31,6 +31,8 @@ export const Profilecontainer = () => {
   const [activeTab, setActiveTab] = useState("restaurants");
 
   const [error, setError] = useState({});
+
+  const [viewMode, setViewMode] = useState("availability");
 
   // Validation function
   const validate = () => {
@@ -61,10 +63,6 @@ export const Profilecontainer = () => {
           const selectedDay = days.length > 0 ? days[0] : null;
 
           const { startTime, endTime } = data.availability[selectedDay] || {};
-
-          console.log("Selected Day:", selectedDay);
-          console.log("Start Time:", startTime);
-          console.log("End Time:", endTime);
           setSelectedDay(selectedDay || null);
           setStartTime(startTime || null);
           setEndTime(endTime || null);
@@ -85,6 +83,10 @@ export const Profilecontainer = () => {
 
     fetchData();
   }, []);
+
+  const handleToggle = (mode) => {
+    setViewMode(mode);
+  };
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -439,45 +441,64 @@ export const Profilecontainer = () => {
       </div>
 
       <div className="preferences-container">
-        <div className="availability-section">
-          <div className="availability-info">
-            <h2>Availability</h2>
-            <ul className="availability-list">
-              {daysOfWeek.map((day) => (
-                <li key={day}>
-                  <strong>{day}:</strong>{" "}
-                  <span className="availability-time">
-                    {userData.availability && userData.availability[day]
-                      ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
-                      : "No Availability Selected"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <button id="avail-button" onClick={handleAvailabilityButtonClick}>
-            Edit Availability
-          </button>
-        </div>
-
-        <div className="locations-section">
-          <div className="locations-info">
-            <h2>Favorite Locations</h2>
-            {fav_locations.length > 0 ? (
-              <ul>
-                {fav_locations.map((location, index) => (
-                  <li key={index}>{location}</li>
+        <ButtonGroup className= "visbutton">
+            <Button
+              variant="secondary"
+              onClick={() => handleToggle("availability")}
+              active={viewMode === "availability"}
+            >
+              Availability
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleToggle("locations")}
+              active={viewMode === "locations"}
+            >
+              Locations
+            </Button>
+          </ButtonGroup>
+        {viewMode === "availability" && (
+          <div className="availability-section">
+            <div className="availability-info">
+              <h2>Availability</h2>
+              <ul className="availability-list">
+                {daysOfWeek.map((day) => (
+                  <li key={day}>
+                    <strong>{day}:</strong>{" "}
+                    <span className="availability-time">
+                      {userData.availability && userData.availability[day]
+                        ? `${userData.availability[day].startTime} - ${userData.availability[day].endTime}`
+                        : "No Availability Selected"}
+                    </span>
+                  </li>
                 ))}
               </ul>
-            ) : (
-              <p>No favorite locations set.</p>
-            )}
+            </div>
+
+            <button id="avail-button" onClick={handleAvailabilityButtonClick}>
+              Edit Availability
+            </button>
           </div>
-          <button id="location-button" onClick={handleLocationButtonClick}>
-            Edit Locations
-          </button>
-        </div>
+        )}
+          {viewMode === "locations" && (
+          <div className="locations-section">
+            <div className="locations-info">
+              <h2>Favorite Locations</h2>
+              {fav_locations.length > 0 ? (
+                <ul>
+                  {fav_locations.map((location, index) => (
+                    <li key={index}>{location}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No favorite locations set.</p>
+              )}
+            </div>
+            <button id="location-button" onClick={handleLocationButtonClick}>
+              Edit Locations
+            </button>
+          </div>
+        )}
 
         {/* Availability Modal */}
         <Modal
