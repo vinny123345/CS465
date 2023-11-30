@@ -17,7 +17,7 @@ export const LoginModule = () => {
             await signInWithEmailAndPassword(getAuth(), email, password);
             navigate(`/profile/${netid}`);
         } catch (e) {
-            setError(e.message);
+            setError('Incorrect netID or password', { type: 'custom', message: 'custom message' });
         }
     }
 
