@@ -43,6 +43,8 @@ export const Profilecontainer = () => {
       newErrors.last_name = "Last name is required";
     // if (!userData.grade) newErrors.grade = 'Grade is required';
     if (userData.gender === "gender") newErrors.gender = "Gender is required";
+    if (userData.grade === "grade") newErrors.grade = "Grade is required";
+    if (userData.major === "major") newErrors.major = "Major is required";
     setError(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -384,34 +386,48 @@ export const Profilecontainer = () => {
                   )}
                 </div>
 
-                <label>Grade</label>
-                <select
-                  name="grade"
-                  className="form-control"
-                  value={userData.grade}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Grade</option>
-                  <option value="Freshman">Freshman</option>
-                  <option value="Sophomore">Sophomore</option>
-                  <option value="Junior">Junior</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Senior">Graduate</option>
-                </select>
-                <label>Major </label>
-                <select
-                  name="major"
-                  className="form-control"
-                  value={userData.major}
-                  onChange={handleChange}
-                >
-                  <option value="">Select Major</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Engineering">Engineering</option>
-                  <option value="Biology">Biology</option>
-                  <option value="Business">Business</option>
-                  <option value="Art">Art</option>
-                </select>
+                <div>
+                  <label>Grade <span style={{ color: "red" }}>*</span></label>
+                  <select
+                    name="grade"
+                    className="form-control"
+                    value={userData.grade}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Grade</option>
+                    <option value="Freshman">Freshman</option>
+                    <option value="Sophomore">Sophomore</option>
+                    <option value="Junior">Junior</option>
+                    <option value="Senior">Senior</option>
+                    <option value="Graduate">Graduate</option>
+                  </select>
+                  {error.grade && (
+                    <p className="error-message">{error.grade}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label>Major  <span style={{ color: "red" }}>*</span></label>
+                  <select
+                    name="major"
+                    className="form-control"
+                    value={userData.major}
+                    onChange={handleChange}
+                  >
+                    <option value="">Select Major</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Biology">Biology</option>
+                    <option value="Business">Business</option>
+                    <option value="Art">Art</option>
+                  </select>
+                  {error.major && (
+                    <p className="error-message">{error.major}</p>
+                  )}
+                </div>
+
+
+
 
                 <button onClick={handleSaveClick}>Save</button>
               </>
@@ -582,7 +598,7 @@ export const Profilecontainer = () => {
             >
               {initialAvailabilityView ? "Cancel" : "Back"}
             </Button>
-            <Button id= "saveavail" variant="primary" onClick={handleSaveAvailability}>
+            <Button id="saveavail" variant="primary" onClick={handleSaveAvailability}>
               Save
             </Button>
           </Modal.Footer>
@@ -652,7 +668,7 @@ export const Profilecontainer = () => {
             <Button variant="secondary" onClick={handleCloseLocationModal}>
               Cancel
             </Button>
-            <Button id= "saveloc" variant="primary" onClick={handleRemoveLocation}>
+            <Button id="saveloc" variant="primary" onClick={handleRemoveLocation}>
               Save
             </Button>
           </Modal.Footer>
