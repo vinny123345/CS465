@@ -24,8 +24,8 @@ export const UserCardSent = ({
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow} style={{paddingBottom: '0'}}>
           <Card.Title>
-            {userObject.last_name ? userObject.last_name : "Last Name"}{" "}
-            {userObject.first_name ? userObject.first_name : "First Name"} (
+          {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.last_name ? userObject.last_name : "Last Name"} (
             {userObject.netid ? userObject.netid : "netid"})
           </Card.Title>
           <Card.Text>
@@ -87,15 +87,15 @@ export const UserCardSent = ({
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {userObject.last_name ? userObject.last_name : "Last Name"}{" "}
-            {userObject.first_name ? userObject.first_name : "First Name"} (
+          {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.last_name ? userObject.last_name : "Last Name"} (
             {userObject.netid ? userObject.netid : "netid"})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Gender: {userObject.gender}</p>
-          <p>Grade: {userObject.grade}</p>
-          <p>Major: {userObject.major}</p>
+          <p>Gender: {userObject.gender ? userObject.gender : 'N/A'}</p>
+          <p>Grade: {userObject.grade ? userObject.grade: 'N/A'}</p>
+          <p>Major: {userObject.major ? userObject.major: 'N/A'}</p>
 
           <p>
               Location:{" "}
@@ -152,7 +152,7 @@ export const UserCardSearch = ({
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow}>
           <Card.Title>
-            {userObject.last_name} {userObject.first_name} ({userObject.netid})
+             {userObject.first_name} {userObject.last_name} ({userObject.netid})
           </Card.Title>
           <Card.Text>
             <p>
@@ -207,13 +207,14 @@ export const UserCardSearch = ({
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {userObject.last_name} {userObject.first_name}
+          {userObject.first_name} {userObject.last_name} 
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Gender: {userObject.gender}</p>
-          <p>Grade: {userObject.grade}</p>
-          <p>Major: {userObject.major}</p>
+          <p>Gender: {userObject.gender ? userObject.gender : 'N/A'}</p>
+          <p>Grade: {userObject.grade ? userObject.grade: 'N/A'}</p>
+          <p>Major: {userObject.major ? userObject.major: 'N/A'}</p>
+
         </Modal.Body>
       </Modal>
     </>
