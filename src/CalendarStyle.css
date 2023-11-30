@@ -1,11 +1,16 @@
 .react-calendar__navigation {
-    background-color: rgb(30, 56, 119); /* Replace with your desired color */
-  }
-
-  /* This targets the buttons (arrows) inside the navigation bar */
-  .react-calendar__tile {
-    color: black; /* Change the color to black or any other color that is visible against your calendar's background */
+  background-color: rgb(30, 56, 119); /* Replace with your desired color */
 }
-  .react-calendar__month-view__days__day--weekend {
-    color: #d10000;
-  }
+
+/* This targets the buttons (arrows) inside the navigation bar */
+.react-calendar__tile {
+  color: black; /* Change the color to black or any other color that is visible against your calendar's background */
+}
+.react-calendar__month-view__days__day--weekend {
+  color: rgb(245, 130, 30);
+}
+/* This targets the current date */
+.react-calendar__tile--now {
+background-color:  rgb(245, 130, 30); /* Replace with the color you want for the current date */
+color: #fff; /* Change the text color to ensure visibility */
+}
