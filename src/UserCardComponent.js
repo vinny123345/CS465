@@ -31,9 +31,12 @@ export const UserCardSent = ({
           <Card.Text>
           <p>
             {requestObject.date ? requestObject.date : "Date"}:
-            {requestObject.time
+            {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime}
+            
+
+            {/* {requestObject.time
               ? requestObject.time.startTime + "-" + requestObject.time.endTime
-              : "time"}{" "}
+              : "time"}{" "} */}
           </p>
           <p>
               Location:{" "}
@@ -105,9 +108,11 @@ export const UserCardSent = ({
 
 
           {requestObject.date ? requestObject.date : "Date"}:
-          {requestObject.time
+          {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime}
+
+          {/* {requestObject.time
             ? requestObject.time.startTime + "-" + requestObject.time.endTime
-            : "time"}{" "}
+            : "time"}{" "} */}
 
           {/* @ {requestObject.location ? requestObject.location : "location"} */}
         </Modal.Body>
