@@ -31,7 +31,13 @@ export const UserCardSent = ({
           <Card.Text>
           <p>
             {requestObject.date ? requestObject.date : "Date"}:
-            {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime}
+
+            {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].startTime ? userObject.availability[requestObject.date].startTime :'N/A'}
+            -
+            {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].endTime ? userObject.availability[requestObject.date].endTime :'N/A'}
+
+            {/* {userObject.availability[requestObject.date].startTime}-
+            {userObject.availability[requestObject.date].endTime} */}
             
 
             {/* {requestObject.time
@@ -108,7 +114,11 @@ export const UserCardSent = ({
 
 
           {requestObject.date ? requestObject.date : "Date"}:
-          {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime}
+          {/* {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime} */}
+          {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].startTime ? userObject.availability[requestObject.date].startTime :'N/A'}
+            -
+          {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].endTime ? userObject.availability[requestObject.date].endTime :'N/A'}
+
 
           {/* {requestObject.time
             ? requestObject.time.startTime + "-" + requestObject.time.endTime
