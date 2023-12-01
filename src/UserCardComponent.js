@@ -13,6 +13,7 @@ export const UserCardSent = ({
   requestObject,
   onAccept,
   onReject,
+  message,
 }) => {
   // for user profile popup
   const [show, setShow] = useState(false);
@@ -80,8 +81,8 @@ export const UserCardSent = ({
           </Popconfirm>
 
           <Popconfirm
-            title="Delete"
-            description="Are you sure to reject?"
+            title={message}
+            description={"Are you sure to " + message.toLowerCase() + "?"}
             onConfirm={onReject}
             // onCancel={console.log('cancel')}
             okText="Yes"
@@ -89,7 +90,7 @@ export const UserCardSent = ({
           >
             {onReject ? (
               <Button variant="danger" style={{ float: "right" }}>
-                Cancel
+                {message}
               </Button>
             ) : (
               <></>
@@ -206,7 +207,7 @@ export const UserCardSearch = ({
         <Card.Body>
           <Popconfirm
             title="Invitation"
-            description="Are you sure to invite?"
+            description="Are you sure to send the invititation?"
             onConfirm={onAccept}
             // onCancel={console.log('cancel')}
             okText="Yes"
@@ -220,7 +221,7 @@ export const UserCardSearch = ({
           </Popconfirm>
 
           <Popconfirm
-            title="Delete"
+            title={"Delete"}
             description="Are you sure to reject?"
             onConfirm={onReject}
             // onCancel={console.log('cancel')}

@@ -13,7 +13,7 @@ import {
   set,
   onValue,
   push,
-  update
+  update,
 } from "firebase/database";
 import { Link, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
@@ -48,21 +48,25 @@ function ComfirmedPage() {
           // requestId: {requestId, netid, time, date, location}
           let sentlist = [];
           if (userobj.sent_requests) {
-            for (const reqid in userobj.sent_requests){
+            for (const reqid in userobj.sent_requests) {
+              if (!userobj.sent_requests[reqid]) {
+                continue;
+              }
+              let eid = userobj.sent_requests[reqid].netid;
 
-              if(!userobj.sent_requests[reqid]){continue}
-              let eid = userobj.sent_requests[reqid].netid
-
-              if(!eid){continue}
-              if(!snapshot.val()[eid]){continue}
-              
+              if (!eid) {
+                continue;
+              }
+              if (!snapshot.val()[eid]) {
+                continue;
+              }
 
               // requestId: {requestId, netid, time, date, location}
               let tempobj = {
                 userData: snapshot.val()[eid],
-                requestData: userobj.sent_requests[reqid]
-              }
-              sentlist.push(tempobj)
+                requestData: userobj.sent_requests[reqid],
+              };
+              sentlist.push(tempobj);
             }
           }
 
@@ -77,30 +81,29 @@ function ComfirmedPage() {
           //   receivedlist = receivedlist.filter((e) => e);
           // }
 
-
           if (userobj.received_requests) {
-            for (const reqid in userobj.received_requests){
+            for (const reqid in userobj.received_requests) {
+              if (!userobj.received_requests[reqid]) {
+                continue;
+              }
+              let eid = userobj.received_requests[reqid].netid;
 
-              if(!userobj.received_requests[reqid]){continue}
-              let eid = userobj.received_requests[reqid].netid
+              if (!eid) {
+                continue;
+              }
+              if (!snapshot.val()[eid]) {
+                continue;
+              }
 
-              if(!eid){continue}
-              if(!snapshot.val()[eid]){continue}
-              
-
-              
               let tempobj = {
                 userData: snapshot.val()[eid],
-                requestData: userobj.received_requests[reqid]
-              }
-              receivedlist.push(tempobj)
+                requestData: userobj.received_requests[reqid],
+              };
+              receivedlist.push(tempobj);
             }
           }
 
-
           console.log(receivedlist);
-
-
 
           setReceived(receivedlist);
 
@@ -113,28 +116,28 @@ function ComfirmedPage() {
           // }
 
           if (userobj.confirmed_requests) {
-            for (const reqid in userobj.confirmed_requests){
+            for (const reqid in userobj.confirmed_requests) {
+              if (!userobj.confirmed_requests[reqid]) {
+                continue;
+              }
+              let eid = userobj.confirmed_requests[reqid].netid;
 
-              if(!userobj.confirmed_requests[reqid]){continue}
-              let eid = userobj.confirmed_requests[reqid].netid
+              if (!eid) {
+                continue;
+              }
+              if (!snapshot.val()[eid]) {
+                continue;
+              }
 
-              if(!eid){continue}
-              if(!snapshot.val()[eid]){continue}
-              
-
-              
               let tempobj = {
                 userData: snapshot.val()[eid],
-                requestData: userobj.confirmed_requests[reqid]
-              }
-              confirmedlist.push(tempobj)
+                requestData: userobj.confirmed_requests[reqid],
+              };
+              confirmedlist.push(tempobj);
             }
           }
 
-
-
           console.log(confirmedlist);
-
 
           setConfirmed(confirmedlist);
         }
@@ -217,16 +220,18 @@ function ComfirmedPage() {
           if (currUserObj) {
             // currUserObj.received_requests = currUserObj.received_requests.filter((e) => e != effectednetid);
 
-            
-
             if (currUserObj.confirmed_requests) {
-              currUserObj.confirmed_requests[requestid] = {...currUserObj.received_requests[requestid]}
+              currUserObj.confirmed_requests[requestid] = {
+                ...currUserObj.received_requests[requestid],
+              };
             } else {
-              currUserObj['confirmed_requests'] = {}
-              currUserObj.confirmed_requests[requestid] = {...currUserObj.received_requests[requestid]}
+              currUserObj["confirmed_requests"] = {};
+              currUserObj.confirmed_requests[requestid] = {
+                ...currUserObj.received_requests[requestid],
+              };
             }
-            delete currUserObj.received_requests[requestid]
-            console.log('receivedAccept curr')
+            delete currUserObj.received_requests[requestid];
+            console.log("receivedAccept curr");
             console.log(currUserObj);
             update(ref(db, `/users/${currnetid}`), currUserObj);
           }
@@ -238,27 +243,29 @@ function ComfirmedPage() {
             // effUserObj.sent_requests = effUserObj.sent_requests.filter(
             //   (e) => e != currnetid
             // );
-            console.log('before if')
-            console.log(requestid)
-            console.log(effectednetid)
-           // console.log(currUserObj.confirmed_requests[requestid])
-            console.log(effUserObj.sent_requests[requestid])
-
+            console.log("before if");
+            console.log(requestid);
+            console.log(effectednetid);
+            // console.log(currUserObj.confirmed_requests[requestid])
+            console.log(effUserObj.sent_requests[requestid]);
 
             if (effUserObj.confirmed_requests) {
-              console.log('if 1')
-              effUserObj.confirmed_requests[requestid] = {...effUserObj.sent_requests[requestid]}
-
+              console.log("if 1");
+              effUserObj.confirmed_requests[requestid] = {
+                ...effUserObj.sent_requests[requestid],
+              };
             } else {
-              console.log('if 2')
-              effUserObj['confirmed_requests'] = {}
-              effUserObj.confirmed_requests[requestid] = {...effUserObj.sent_requests[requestid]}
+              console.log("if 2");
+              effUserObj["confirmed_requests"] = {};
+              effUserObj.confirmed_requests[requestid] = {
+                ...effUserObj.sent_requests[requestid],
+              };
             }
 
-            delete effUserObj.sent_requests[requestid]
-            console.log('receivedAccept eff')
+            delete effUserObj.sent_requests[requestid];
+            console.log("receivedAccept eff");
             console.log(effUserObj);
-            console.log('____________receivedAccept eff______________')
+            console.log("____________receivedAccept eff______________");
             update(ref(db, `/users/${effectednetid}`), effUserObj);
           }
         } else {
@@ -343,7 +350,10 @@ function ComfirmedPage() {
             // );
             // console.log(updatedEffUserList);
             set(
-              ref(db, `/users/${effectednetid}/confirmed_requests/${requestid}`),
+              ref(
+                db,
+                `/users/${effectednetid}/confirmed_requests/${requestid}`
+              ),
               null
             );
           }
@@ -356,63 +366,85 @@ function ComfirmedPage() {
       });
   };
 
-
-                // requestId: {requestId, netid, time, date, location}
-                // let tempobj = {
-                //   userData: snapshot.val()[eid],
-                //   requestData: userobj.sent_requests[reqid]
-                // }
+  // requestId: {requestId, netid, time, date, location}
+  // let tempobj = {
+  //   userData: snapshot.val()[eid],
+  //   requestData: userobj.sent_requests[reqid]
+  // }
 
   return (
-    <div className= "confirmedpage">
-    <Tabs defaultActiveKey="Sent" id="fill-tab-example" className="mb-3" fill>
-      <Tab eventKey="Sent" title="Sent">
-        <div className="confirmed-page-window">
-          {sent.map((e, i) => {
-            return (
-              <UserCardSent
-                key={i}
-                userObject={e.userData}
-                requestObject={e.requestData}
-                onAccept={null}
-                onReject={() => sentReject(user, e.userData.netid, e.requestData.requestId)}
-              />
-            );
-          })}
-        </div>
-      </Tab>
-      <Tab eventKey="Received" title="Received">
-        <div className="confirmed-page-window">
-          {received.map((e, i) => {
-            return (
-              <UserCardSent
-                key={i}
-                userObject={e.userData}
-                requestObject={e.requestData}
-                onAccept={() => receivedAccept(user, e.userData.netid, e.requestData.requestId)}
-                onReject={() => receivedReject(user, e.userData.netid, e.requestData.requestId)}
-              />
-            );
-          })}
-        </div>
-      </Tab>
+    <div className="confirmedpage">
+      <Tabs defaultActiveKey="Sent" id="fill-tab-example" className="mb-3" fill>
+        <Tab eventKey="Sent" title="Sent">
+          <div className="confirmed-page-window">
+            {sent.map((e, i) => {
+              return (
+                <UserCardSent
+                  key={i}
+                  userObject={e.userData}
+                  requestObject={e.requestData}
+                  onAccept={null}
+                  onReject={() =>
+                    sentReject(user, e.userData.netid, e.requestData.requestId)
+                  }
+                  message="Withdraw"
+                />
+              );
+            })}
+          </div>
+        </Tab>
+        <Tab eventKey="Received" title="Received">
+          <div className="confirmed-page-window">
+            {received.map((e, i) => {
+              return (
+                <UserCardSent
+                  key={i}
+                  userObject={e.userData}
+                  requestObject={e.requestData}
+                  onAccept={() =>
+                    receivedAccept(
+                      user,
+                      e.userData.netid,
+                      e.requestData.requestId
+                    )
+                  }
+                  onReject={() =>
+                    receivedReject(
+                      user,
+                      e.userData.netid,
+                      e.requestData.requestId
+                    )
+                  }
+                  message="Reject"
+                />
+              );
+            })}
+          </div>
+        </Tab>
 
-      <Tab eventKey="Confirmed" title="Confirmed">
-        <div className="confirmed-page-window">
-          {confirmed.map((e, i) => {
-            return (
-              <UserCardSent
-                key={i}
-                userObject={e.userData}
-                requestObject={e.requestData}
-                onAccept={null}
-                onReject={() => confirmedReject(user, e.userData.netid, e.requestData.requestId)}
-              />
-            );
-          })}
-        </div>
-      </Tab>
-    </Tabs>
+        <Tab eventKey="Confirmed" title="Confirmed">
+          <div className="confirmed-page-window">
+            {confirmed.map((e, i) => {
+              return (
+                <UserCardSent
+                  key={i}
+                  userObject={e.userData}
+                  requestObject={e.requestData}
+                  onAccept={null}
+                  onReject={() =>
+                    confirmedReject(
+                      user,
+                      e.userData.netid,
+                      e.requestData.requestId
+                    )
+                  }
+                  message="Withdraw"
+                />
+              );
+            })}
+          </div>
+        </Tab>
+      </Tabs>
     </div>
   );
 }
