@@ -557,7 +557,7 @@ export const Profilecontainer = () => {
                     <option value="11:00 AM">11:00 AM</option>
                     <option value="11:30 AM">11:30 AM</option>
                     <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 AM">12:30 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
                     <option value="1:00 PM">1:00 PM</option>
                     <option value="1:30 PM">1:30 PM</option>
                     <option value="2:00 PM">2:00 PM</option>
@@ -577,7 +577,7 @@ export const Profilecontainer = () => {
                     <option value="11:00 AM">11:00 AM</option>
                     <option value="11:30 AM">11:30 AM</option>
                     <option value="12:00 PM">12:00 PM</option>
-                    <option value="12:30 AM">12:30 PM</option>
+                    <option value="12:30 PM">12:30 PM</option>
                     <option value="1:00 PM">1:00 PM</option>
                     <option value="1:30 PM">1:30 PM</option>
                     <option value="2:00 PM">2:00 PM</option>
