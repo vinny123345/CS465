@@ -377,6 +377,7 @@ export const Profilecontainer = () => {
                     value={userData.gender}
                     onChange={handleChange}
                   >
+                    <option value="gender">Select Your Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                     <option value="Non-Binary">Non-Binary</option>
