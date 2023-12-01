@@ -22,44 +22,46 @@ export const UserCardSent = ({
   return (
     <>
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
-        <Card.Body onClick={handleShow} style={{paddingBottom: '0'}}>
+        <Card.Body onClick={handleShow} style={{ paddingBottom: "0" }}>
           <Card.Title>
-          {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.first_name ? userObject.first_name : "First Name"}{" "}
             {userObject.last_name ? userObject.last_name : "Last Name"} (
             {userObject.netid ? userObject.netid : "netid"})
           </Card.Title>
           <Card.Text>
-          <p>
-            {requestObject.date ? requestObject.date : "Date"}:
-
-            {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].startTime ? userObject.availability[requestObject.date].startTime :'N/A'}
-            -
-            {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].endTime ? userObject.availability[requestObject.date].endTime :'N/A'}
-
-            {/* {userObject.availability[requestObject.date].startTime}-
-            {userObject.availability[requestObject.date].endTime} */}
-            
-
-            {/* {requestObject.time
-              ? requestObject.time.startTime + "-" + requestObject.time.endTime
-              : "time"}{" "} */}
-          </p>
-          <p>
+            <p>
               Location:{" "}
               {userObject.fav_locations === undefined
                 ? "No favorite locations"
                 : userObject.fav_locations.map((location) => {
                     return location + ", ";
                   })}
-          </p>
-
-
+            </p>
+            <p>
+              {requestObject.date ? requestObject.date : "Date"}:
+              {requestObject.date &&
+              userObject.availability &&
+              userObject.availability[requestObject.date] &&
+              userObject.availability[requestObject.date].startTime
+                ? userObject.availability[requestObject.date].startTime
+                : "N/A"}
+              -
+              {requestObject.date &&
+              userObject.availability &&
+              userObject.availability[requestObject.date] &&
+              userObject.availability[requestObject.date].endTime
+                ? userObject.availability[requestObject.date].endTime
+                : "N/A"}
+              {/* {userObject.availability[requestObject.date].startTime}-
+            {userObject.availability[requestObject.date].endTime} */}
+              {/* {requestObject.time
+              ? requestObject.time.startTime + "-" + requestObject.time.endTime
+              : "time"}{" "} */}
+            </p>
             {/* @ {requestObject.location ? requestObject.location : "location"} */}
-
-          
           </Card.Text>
         </Card.Body>
-        <Card.Body style={{paddingTop: '0'}}>
+        <Card.Body style={{ paddingTop: "0" }}>
           <Popconfirm
             title="Accept"
             description="Are you sure to accept?"
@@ -68,7 +70,13 @@ export const UserCardSent = ({
             okText="Yes"
             cancelText="No"
           >
-            {onAccept ? <Button variant="success" style={{ float: "left" }}>Accept</Button> : <></>}
+            {onAccept ? (
+              <Button variant="success" style={{ float: "left" }}>
+                Accept
+              </Button>
+            ) : (
+              <></>
+            )}
           </Popconfirm>
 
           <Popconfirm
@@ -93,37 +101,41 @@ export const UserCardSent = ({
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-          {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.first_name ? userObject.first_name : "First Name"}{" "}
             {userObject.last_name ? userObject.last_name : "Last Name"} (
             {userObject.netid ? userObject.netid : "netid"})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Gender: {userObject.gender ? userObject.gender : 'N/A'}</p>
-          <p>Grade: {userObject.grade ? userObject.grade: 'N/A'}</p>
-          <p>Major: {userObject.major ? userObject.major: 'N/A'}</p>
-
+          <p>Gender: {userObject.gender ? userObject.gender : "N/A"}</p>
+          <p>Grade: {userObject.grade ? userObject.grade : "N/A"}</p>
+          <p>Major: {userObject.major ? userObject.major : "N/A"}</p>
           <p>
-              Location:{" "}
-              {userObject.fav_locations === undefined
-                ? "No favorite locations"
-                : userObject.fav_locations.map((location) => {
-                    return location + ", ";
-                  })}
+            Location:{" "}
+            {userObject.fav_locations === undefined
+              ? "No favorite locations"
+              : userObject.fav_locations.map((location) => {
+                  return location + ", ";
+                })}
           </p>
-
-
           {requestObject.date ? requestObject.date : "Date"}:
+          {requestObject.date &&
+          userObject.availability &&
+          userObject.availability[requestObject.date] &&
+          userObject.availability[requestObject.date].startTime
+            ? userObject.availability[requestObject.date].startTime
+            : "N/A"}
+          -
+          {requestObject.date &&
+          userObject.availability &&
+          userObject.availability[requestObject.date] &&
+          userObject.availability[requestObject.date].endTime
+            ? userObject.availability[requestObject.date].endTime
+            : "N/A"}
           {/* {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime} */}
-          {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].startTime ? userObject.availability[requestObject.date].startTime :'N/A'}
-            -
-          {requestObject.date && userObject.availability && userObject.availability[requestObject.date] && userObject.availability[requestObject.date].endTime ? userObject.availability[requestObject.date].endTime :'N/A'}
-
-
           {/* {requestObject.time
             ? requestObject.time.startTime + "-" + requestObject.time.endTime
             : "time"}{" "} */}
-
           {/* @ {requestObject.location ? requestObject.location : "location"} */}
         </Modal.Body>
         <Modal.Footer>
@@ -162,13 +174,11 @@ export const UserCardSearch = ({
       <Card style={{ width: "21rem", margin: "auto", marginBottom: "10px" }}>
         <Card.Body onClick={handleShow}>
           <Card.Title>
-             {userObject.first_name} {userObject.last_name} ({userObject.netid})
+            {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.last_name ? userObject.last_name : "Last Name"} (
+            {userObject.netid ? userObject.netid : "netid"})
           </Card.Title>
           <Card.Text>
-            <p>
-              Time: {userObject.availability[dayOfWeek].startTime}-
-              {userObject.availability[dayOfWeek].endTime}
-            </p>
             <p>
               Location:{" "}
               {userObject.fav_locations === undefined
@@ -176,6 +186,20 @@ export const UserCardSearch = ({
                 : userObject.fav_locations.map((location) => {
                     return location + ", ";
                   })}
+            </p>
+            <p>
+              Time:{" "}
+              {userObject.availability &&
+              userObject.availability[dayOfWeek] &&
+              userObject.availability[dayOfWeek].startTime
+                ? userObject.availability[dayOfWeek].startTime
+                : "N/A"}
+              -
+              {userObject.availability &&
+              userObject.availability[dayOfWeek] &&
+              userObject.availability[dayOfWeek].endTime
+                ? userObject.availability[dayOfWeek].endTime
+                : "N/A"}
             </p>
           </Card.Text>
         </Card.Body>
@@ -217,14 +241,36 @@ export const UserCardSearch = ({
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-          {userObject.first_name} {userObject.last_name} 
+            {userObject.first_name ? userObject.first_name : "First Name"}{" "}
+            {userObject.last_name ? userObject.last_name : "Last Name"} (
+            {userObject.netid ? userObject.netid : "netid"})
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Gender: {userObject.gender ? userObject.gender : 'N/A'}</p>
-          <p>Grade: {userObject.grade ? userObject.grade: 'N/A'}</p>
-          <p>Major: {userObject.major ? userObject.major: 'N/A'}</p>
-
+          <p>Gender: {userObject.gender ? userObject.gender : "N/A"}</p>
+          <p>Grade: {userObject.grade ? userObject.grade : "N/A"}</p>
+          <p>Major: {userObject.major ? userObject.major : "N/A"}</p>
+          <p>
+            Location:{" "}
+            {userObject.fav_locations === undefined
+              ? "No favorite locations"
+              : userObject.fav_locations.map((location) => {
+                  return location + ", ";
+                })}
+          </p>
+          {dayOfWeek}:
+          {/* {userObject.availability[requestObject.date].startTime}-{userObject.availability[requestObject.date].endTime} */}
+          {userObject.availability &&
+          userObject.availability[dayOfWeek] &&
+          userObject.availability[dayOfWeek].startTime
+            ? userObject.availability[dayOfWeek].startTime
+            : "N/A"}
+          -
+          {userObject.availability &&
+          userObject.availability[dayOfWeek] &&
+          userObject.availability[dayOfWeek].endTime
+            ? userObject.availability[dayOfWeek].endTime
+            : "N/A"}
         </Modal.Body>
       </Modal>
     </>
