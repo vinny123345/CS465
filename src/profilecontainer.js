@@ -278,7 +278,7 @@ export const Profilecontainer = () => {
                     style={{ display: "block", width: "120px", height: "30px" }}
                     onClick={() => document.getElementById("getFile").click()}
                   >
-                    Choose File
+                    Choose
                   </button>
                   <input
                     type="file"
